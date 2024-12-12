@@ -1,0 +1,34 @@
+package views
+
+import (
+  "fmt"
+  "github.com/deastl/htmx-doom/gameobjects"
+)
+css plane(xrot int, yrot int, zrot int, trnsx int,trnsy int,trnsz int, height int,brightness int){
+  transform: {
+    templ.SafeCSSProperty(
+    fmt.Sprintf(
+      `translate3d(%dpx,%dpx,%dpx) rotate3d(0,1,0,%ddeg)`,
+      trnsx,
+      trnsy,
+      trnsz,
+      yrot))
+  };
+  transform-style: preserve-3d;
+  background-image: url("/public/brick.jpg");
+  width: 255px;
+  filter: {
+    templ.SafeCSSProperty(
+    fmt.Sprintf(
+      `brightness(%d%%)`,
+      brightness,
+    ))
+    };
+  position: absolute;
+  height: {fmt.Sprintf("%dpx", height)};
+}
+
+templ Plane(wall gameobjects.Wall) {
+<div class={plane(0,wall.Rotation,0,wall.X,0,wall.Y,wall.Height,wall.Brightness)}>
+</div>
+}

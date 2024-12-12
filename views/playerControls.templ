@@ -1,0 +1,16 @@
+package views
+
+
+templ PlayerControls() {
+  <span hx-trigger="keydown[key=='w'] from:body" id="player_forward_down" ws-send></span>
+  <span hx-trigger="keyup[key=='w'] from:body" id="player_forward_up" ws-send></span>
+
+  <span hx-trigger="keydown[key=='s'] from:body" id="player_backward_down" ws-send></span>
+  <span hx-trigger="keyup[key=='s'] from:body" id="player_backward_up" ws-send></span>
+
+  <span hx-trigger="keydown[key=='d'] from:body" id="player_right_down" ws-send></span>
+  <span hx-trigger="keyup[key=='d'] from:body" id="player_right_up" ws-send></span>
+
+  <span hx-trigger="keydown[key=='a'] from:body" id="player_left_down" ws-send></span>
+  <span hx-trigger="keyup[key=='a'] from:body" id="player_left_up" ws-send></span>
+}
