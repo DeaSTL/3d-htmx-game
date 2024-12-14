@@ -9,9 +9,9 @@ templ Scene(game *gameobjects.GameMap) {
 		for _,wall := range game.Walls {
 			@Plane(wall)
 		}
-    <div style="position: absolute; transform: scale3d(100,100,100) translate3d(0,0em,0) rotate3d(1,0,0,90deg); background: blue; width: 2000px; height: 2000px; transform-style: preserve-3d;">
+    <div style="position: absolute; transform: scale3d(100,100,100) translate3d(0,0em,0) rotate3d(1,0,0,90deg); background: #2F4F4F; width: 2000px; height: 2000px; transform-style: preserve-3d;">
     </div>                                                                                                       
-    <div style="position: absolute; transform: scale3d(100,100,100) translate3d(0,-1em,0) rotate3d(1,0,0,90deg); background: black; width: 2000px; height: 2000px; transform-style: preserve-3d;">
+    <div style="position: absolute; transform: scale3d(100,100,100) translate3d(0,-1em,0) rotate3d(1,0,0,90deg); background-image: radial-gradient(#00BFFF, white, blue); width: 2000px; height: 2000px; transform-style: preserve-3d;">
     </div>
 	</div>
 }
@@ -19,13 +19,17 @@ templ Scene(game *gameobjects.GameMap) {
 
 templ SceneTransform(player *gameobjects.Player) {
   @templ.Raw("<style id='scene_transform'> #scene{" + 
-  fmt.Sprintf(`transform: perspective(2048px) rotate3d(0,1,0,%fdeg) translate3d(%fem,%fem,%fem); transform-origin: %fem 10rem %fem;`,
+  fmt.Sprintf(`
+  transform: perspective(2048px) 
+  rotate3d(0,1,0,%fdeg) 
+  translate3d(%fem,%fem,%fem) translate3d(%fem,%fem,%fem) scale3d(100,100,100); `,
   player.Rotation,
   player.X,
   player.Y,
   player.Z,
-  -50,
-  -50,
+  player.Direction.X,
+  0.0,
+  player.Direction.Y,
   )+
   "}</style>")
 }

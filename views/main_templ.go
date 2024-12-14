@@ -26,7 +26,7 @@ func Main() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><script src=\"https://unpkg.com/htmx.org@2.0.1\"></script><script src=\"https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js\"></script><style>\n        *{\n          margin:0;\n          padding:0;\n          box-sizing: border-box;\n        }\n        body {\n          transform: translateX(50%) translateY(50%);\n        }\n        .scene {\n          position: relative;\n          transform-style: preserve-3d;\n          margin: 0;\n          overflow-scroll: none;\n          width: 500px;\n          height: 500px;\n        }\n      </style></head><body><div hx-ext=\"ws\" ws-connect=\"/ws\"><div hx-trigger=\"load delay:2s\" id=\"player_init\" ws-send></div><div id=\"scene_transform\"></div><div id=\"scene\" class=\"scene\"></div><div id=\"player_controls\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><script src=\"https://unpkg.com/htmx.org@2.0.1\"></script><script src=\"https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js\"></script><style>\n    * {\n      margin: 0;\n      padding: 0;\n      box-sizing: border-box;\n    }\n\n    body {\n      transform: translateX(50%) translateY(50%);\n    }\n\n    .scene {\n      position: absolute;\n      transform-style: preserve-3d;\n      margin: 0;\n      overflow-scroll: none;\n    }\n  </style></head><body><div hx-ext=\"ws\" ws-connect=\"/ws\"><div hx-trigger=\"load, htmx:wsOpen dely:2s\" id=\"player_init\" ws-send></div><div id=\"scene_transform\"></div><div id=\"scene\" class=\"scene\"></div><div id=\"player_controls\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

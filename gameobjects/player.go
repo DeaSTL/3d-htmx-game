@@ -23,36 +23,38 @@ type Player struct {
 	TranslationMatrix [4][4]float64
 	RotationMatrix    [4][4]float64
 	ID                string
+	MovementSpeed     float64
 }
 
 func NewPlayer(options Player) Player {
 	newPlayer := options
-  newPlayer.updateDirection()
+	newPlayer.updateDirection()
+	newPlayer.MovementSpeed = 250
 	return newPlayer
 }
 
-func (p *Player) updateDirection()  {
-  p.Direction.X = math.Sin(float64(p.Rotation + 90) * (math.Pi / 180))
-  p.Direction.Y = math.Cos(float64(p.Rotation + 90) * (math.Pi / 180))
+func (p *Player) updateDirection() {
+	p.Direction.X = math.Sin(float64(p.Rotation+90) * (math.Pi / 180))
+	p.Direction.Y = math.Cos(float64(p.Rotation+90) * (math.Pi / 180))
 }
 
 func (p *Player) Update() {
 	if p.ControlsState.TurningRight {
-		p.Rotation+=5
-    p.updateDirection()
+		p.Rotation += 3
+		p.updateDirection()
 	}
 	if p.ControlsState.TurningLeft {
-		p.Rotation-=5
-    p.updateDirection()
+		p.Rotation -= 3
+		p.updateDirection()
 	}
 
 	if p.ControlsState.MovingBackward {
-		p.Z -= 10 * p.Direction.X
-		p.X -= 10 * p.Direction.Y
+		p.Z -= p.MovementSpeed * p.Direction.X
+		p.X -= p.MovementSpeed * p.Direction.Y
 	}
 	if p.ControlsState.MovingForward {
-		p.Z += 10 * p.Direction.X
-		p.X += 10 * p.Direction.Y
+		p.Z += p.MovementSpeed * p.Direction.X
+		p.X += p.MovementSpeed * p.Direction.Y
 	}
 	// p.TranslationMatrix = [4][4]float64{
 	// 	{1, 0, 0, float64(p.X)},

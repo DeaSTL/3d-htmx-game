@@ -22,10 +22,12 @@ func plane(xrot int, yrot int, zrot int, trnsx int, trnsy int, trnsz int, height
 				trnsx,
 				trnsy,
 				trnsz,
-				yrot)))))
+				yrot,
+			)))))
 	templ_7745c5c3_CSSBuilder.WriteString(`transform-style:preserve-3d;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`background-image:url("/public/brick.jpg");`)
 	templ_7745c5c3_CSSBuilder.WriteString(`width:255px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`transform-origin:128px 0 128px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`filter`,
 		templ.SafeCSSProperty(
 			fmt.Sprintf(
@@ -59,7 +61,7 @@ func Plane(wall gameobjects.Wall) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{plane(0, wall.Rotation, 0, wall.X, 0, wall.Y, wall.Height, wall.Brightness)}
+		var templ_7745c5c3_Var2 = []any{plane(0, wall.Rotation, 0, wall.X, 0, wall.Z, wall.Height, wall.Brightness)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

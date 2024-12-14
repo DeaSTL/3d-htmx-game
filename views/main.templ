@@ -3,41 +3,44 @@ package views
 
 
 templ Main() {
-	<html>
-		<head>
-			<script src="https://unpkg.com/htmx.org@2.0.1"></script>
-			<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
-      <style>
-        *{
-          margin:0;
-          padding:0;
-          box-sizing: border-box;
-        }
-        body {
-          transform: translateX(50%) translateY(50%);
-        }
-        .scene {
-          position: relative;
-          transform-style: preserve-3d;
-          margin: 0;
-          overflow-scroll: none;
-          width: 500px;
-          height: 500px;
-        }
-      </style>
-		</head>
-		<body>
-			<div hx-ext="ws" ws-connect="/ws">
-        <div hx-trigger="load delay:2s" id="player_init" ws-send>
-        </div>
-        <div id="scene_transform">
-        </div>
-        <div id="scene" class="scene">
-        </div>
-        <div id="player_controls">
-          @PlayerControls()
-        </div>
-			</div>
-		</body>
-	</html>
+<html>
+
+<head>
+  <script src="https://unpkg.com/htmx.org@2.0.1"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      transform: translateX(50%) translateY(50%);
+    }
+
+    .scene {
+      position: absolute;
+      transform-style: preserve-3d;
+      margin: 0;
+      overflow-scroll: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div hx-ext="ws" ws-connect="/ws">
+    <div hx-trigger="load, htmx:wsOpen dely:2s" id="player_init" ws-send>
+    </div>
+    <div id="scene_transform">
+    </div>
+    <div id="scene" class="scene">
+    </div>
+    <div id="player_controls">
+      @PlayerControls()
+    </div>
+  </div>
+</body>
+
+</html>
 }

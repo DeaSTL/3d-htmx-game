@@ -21,9 +21,10 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap){
     }
     game.AddPlayer(gameobjects.NewPlayer(gameobjects.Player{
       ID: client.ID,
-      X: 0,
-      Y: 14,
-      Z: 0,
+      X: -1024,
+      Y: 2048,
+      Z: -1024,
+      Rotation: 128,
     }))
     log.Printf("Player Connected %v", client.ID)
     client.WriteMessage(buffer.Bytes()) 
