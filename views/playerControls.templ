@@ -13,4 +13,7 @@ templ PlayerControls() {
 
   <span hx-trigger="keydown[key=='a'] from:body" id="player_left_down" ws-send></span>
   <span hx-trigger="keyup[key=='a'] from:body" id="player_left_up" ws-send></span>
+
+  <span hx-trigger="keydown[key==' '] from:body" id="player_space_down" ws-send></span>
+  <span hx-trigger="keyup[key==' '] from:body" id="player_space_up" ws-send></span>
 }

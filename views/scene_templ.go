@@ -41,7 +41,7 @@ func Scene(game *gameobjects.GameMap) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div style=\"position: absolute; transform: scale3d(100,100,100) translate3d(0,0em,0) rotate3d(1,0,0,90deg); background: #2F4F4F; width: 2000px; height: 2000px; transform-style: preserve-3d;\"></div><div style=\"position: absolute; transform: scale3d(100,100,100) translate3d(0,-1em,0) rotate3d(1,0,0,90deg); background-image: radial-gradient(#00BFFF, white, blue); width: 2000px; height: 2000px; transform-style: preserve-3d;\"></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div style=\"transform-origin: 0 0 0; position: absolute; transform: translate3d(0,0px,0) rotate3d(1,0,0,90deg); background-image: url(&#39;/public/stone-floor.jpg&#39;); width: 20000px; height: 20000px; background-size: 255px 255px; transform-style: preserve-3d;\"></div><div style=\"position: absolute; transform: scale3d(100,100,100) translate3d(0,1em,0) rotate3d(1,0,0,90deg); background-image: radial-gradient(#00BFFF, white, blue); width: 2000px; height: 2000px; transform-style: preserve-3d;\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,14 +71,11 @@ func SceneTransform(player *gameobjects.Player) templ.Component {
 			fmt.Sprintf(`
   transform: perspective(2048px) 
   rotate3d(0,1,0,%fdeg) 
-  translate3d(%fem,%fem,%fem) translate3d(%fem,%fem,%fem) scale3d(100,100,100); `,
-				player.Rotation,
-				player.X,
-				player.Y,
-				player.Z,
-				player.Direction.X,
-				0.0,
-				player.Direction.Y,
+  translate3d(%fem,%fem,%fem) scale3d(100,-100,100); `,
+				player.CameraState.Rotation.Y,
+				player.CameraState.Position.X,
+				player.CameraState.Position.Y,
+				player.CameraState.Position.Z,
 			)+
 			"}</style>").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

@@ -7,6 +7,7 @@ var count = 0
 type Wall struct {
 	X          int
 	Z          int
+  Y int
 	Rotation   int
 	Height     int
 	Brightness int
@@ -19,6 +20,7 @@ func NewWall(options Wall) Wall {
   newWall.ID = count;
 	if newWall.Height == 0 {
 		newWall.Height = 1024
+    newWall.Y = -1024
 	}
 	if newWall.Brightness == 0 {
 		newWall.Brightness = int(80 * math.Abs(math.Cos(

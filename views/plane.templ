@@ -8,7 +8,7 @@ css plane(xrot int, yrot int, zrot int, trnsx int,trnsy int,trnsz int, height in
   transform: {
     templ.SafeCSSProperty(
     fmt.Sprintf(
-      `translate3d(%dpx,%dpx,%dpx) rotate3d(0,1,0,%ddeg)`,
+      `scale3d(1,-1,1) translate3d(%dpx,%dpx,%dpx) rotate3d(0,1,0,%ddeg) `,
       trnsx,
       trnsy,
       trnsz,
@@ -16,8 +16,10 @@ css plane(xrot int, yrot int, zrot int, trnsx int,trnsy int,trnsz int, height in
       ))
   };
   transform-style: preserve-3d;
-  background-image: url("/public/brick.jpg");
+  background-image: url("/public/industrial-wall.jpg");
   width: 255px;
+  background-size: 512px 512px;
+  image-rendering: pixelated;
   transform-origin: 128px 0 128px;
   filter: {
     templ.SafeCSSProperty(
@@ -26,11 +28,18 @@ css plane(xrot int, yrot int, zrot int, trnsx int,trnsy int,trnsz int, height in
       brightness,
     ))
     };
+  color: red;
+  font-size: 30px;
   position: absolute;
   height: {fmt.Sprintf("%dpx", height)};
 }
 
 templ Plane(wall gameobjects.Wall) {
-<div class={plane(0,wall.Rotation,0,wall.X,0,wall.Z,wall.Height,wall.Brightness)}>
+<div class={plane(0,wall.Rotation,0,wall.X,wall.Y,wall.Z,wall.Height,wall.Brightness)}>
+  {fmt.Sprintf("%+v, %+v",wall.X,wall.Z)}
+
+  //we'll get back to you later....
+  //<iframe src="https://example.com" height="1024"></iframe>
+  //uncomment for pure chaos
 </div>
 }

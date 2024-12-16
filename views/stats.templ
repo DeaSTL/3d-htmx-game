@@ -1,0 +1,15 @@
+package views
+
+import (
+"github.com/deastl/htmx-doom/gameobjects"
+"fmt"
+)
+
+
+templ Stats(stats []gameobjects.Stat){
+  <div id="stats" class="stats">
+    for _,s := range stats {
+      <div> {fmt.Sprintf("%s: %+v",s.Key,s.Value)} </div>
+    }
+  </div>
+}

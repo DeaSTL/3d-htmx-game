@@ -4,30 +4,77 @@ import (
 	"bytes"
 	"context"
 	"log"
+	"time"
 
 	"github.com/deastl/htmx-doom/gameobjects"
+	"github.com/deastl/htmx-doom/utils"
 	"github.com/deastl/htmx-doom/views"
 	hx "github.com/deastl/hxsocketsfiber"
 )
 
+func StartRenderUpdateLoop(p *gameobjects.Player) {
+	go func() {
+		for {
+			time.Sleep(time.Millisecond * 30)
+			p.Update()
+
+			buffer := new(bytes.Buffer)
+			err := views.SceneTransform(p).
+				Render(context.Background(), buffer)
+			if err != nil {
+				log.Printf("Error rendering plane")
+			}
+			// if client.ID == "NULL" {
+			//   return;
+			// }
+			p.Socket.WriteMessage(buffer.Bytes())
+      p.FrameCount++
+      //Send stats every 3 frames
+      if p.FrameCount % 3 == 0 {
+        buffer := new(bytes.Buffer)
+        err := views.Stats(p.Stats).
+        Render(context.Background(), buffer)
+        if err != nil {
+          log.Printf("Error rendering Stats")
+        }
+        p.Socket.WriteMessage(buffer.Bytes())
+      }
+		}
+	}()
+}
 func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap){
   s.Listen("player_init",func(client *hx.Client, msg []byte){
+    log.Printf("player_init %+v",client.ID)
     //might parse some meta data here
+    if game.LookupPlayer(client.ID) != nil {
+      return;
+    }
     buffer := new(bytes.Buffer)
     err := views.Scene(game).
     Render(context.Background(),buffer)
     if err != nil {
-      log.Printf("Error rendering plane")
+      log.Printf("Error rendering scene")
     }
-    game.AddPlayer(gameobjects.NewPlayer(gameobjects.Player{
+
+    newPlayer := gameobjects.NewPlayer(gameobjects.Player{
       ID: client.ID,
-      X: -1024,
-      Y: 2048,
-      Z: -1024,
-      Rotation: 128,
-    }))
+      Socket: client,
+    })
+    newPlayer.Position = utils.NewVector3(-1024,0,-1024)
+    newPlayer.Rotation.Y = 128
+    game.AddPlayer(&newPlayer)
     log.Printf("Player Connected %v", client.ID)
-    client.WriteMessage(buffer.Bytes()) 
+    newPlayer.Socket = client;
+    newPlayer.Socket.WriteMessage(buffer.Bytes()) 
+    time.Sleep(time.Second * 2)
+    StartRenderUpdateLoop(&newPlayer)
+  })
+
+  s.Listen("player_space_up",func(client *hx.Client, msg []byte){
+    game.LookupPlayer(client.ID).ControlsState.Space = true
+  })
+  s.Listen("player_space_down",func(client *hx.Client, msg []byte){
+    game.LookupPlayer(client.ID).ControlsState.Space = false
   })
   s.Listen("player_forward_up",func(client *hx.Client, msg []byte){
     game.LookupPlayer(client.ID).ControlsState.MovingForward = false

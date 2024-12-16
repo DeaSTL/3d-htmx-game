@@ -17,6 +17,7 @@ templ Main() {
 
     body {
       transform: translateX(50%) translateY(50%);
+      overflow: hidden;
     }
 
     .scene {
@@ -25,10 +26,23 @@ templ Main() {
       margin: 0;
       overflow-scroll: none;
     }
+    .stats {
+      position: relative;
+      left: 0px;
+      top: 0px;
+      color: red;
+      z-index: 2;
+      transform: translateX(-50vw) translateY(-50vh);
+      width: 100vw;
+      height: 200px;
+      font-size: 50px;
+    }
   </style>
 </head>
 
 <body>
+  <div id="stats" class="stats">
+  </div>
   <div hx-ext="ws" ws-connect="/ws">
     <div hx-trigger="load, htmx:wsOpen dely:2s" id="player_init" ws-send>
     </div>
