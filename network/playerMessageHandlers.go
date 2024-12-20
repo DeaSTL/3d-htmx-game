@@ -12,7 +12,7 @@ import (
 	hx "github.com/deastl/hxsocketsfiber"
 )
 
-func StartRenderUpdateLoop(p *gameobjects.Player) {
+func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) {
 	go func() {
 		for {
 			time.Sleep(time.Millisecond * 30)
@@ -27,6 +27,7 @@ func StartRenderUpdateLoop(p *gameobjects.Player) {
 			// if client.ID == "NULL" {
 			//   return;
 			// }
+      // p.CalaculateCollision(gameMap)
 			p.Socket.WriteMessage(buffer.Bytes())
       p.FrameCount++
       //Send stats every 3 frames
@@ -60,14 +61,15 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap){
       ID: client.ID,
       Socket: client,
     })
-    newPlayer.Position = utils.NewVector3(-1024,0,-1024)
+    newPlayer.PreviousPosition = utils.NewVector3(1024,0,1024)
+    newPlayer.Position = utils.NewVector3(1024,0,1024)
     newPlayer.Rotation.Y = 128
     game.AddPlayer(&newPlayer)
     log.Printf("Player Connected %v", client.ID)
     newPlayer.Socket = client;
     newPlayer.Socket.WriteMessage(buffer.Bytes()) 
     time.Sleep(time.Second * 2)
-    StartRenderUpdateLoop(&newPlayer)
+    StartRenderUpdateLoop(&newPlayer,game)
   })
 
   s.Listen("player_space_up",func(client *hx.Client, msg []byte){

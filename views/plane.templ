@@ -2,13 +2,14 @@ package views
 
 import (
   "fmt"
+  "github.com/deastl/htmx-doom/utils"
   "github.com/deastl/htmx-doom/gameobjects"
 )
-css plane(xrot int, yrot int, zrot int, trnsx int,trnsy int,trnsz int, height int,brightness int){
+css plane(xrot float64, yrot float64, zrot float64, trnsx float64,trnsy float64,trnsz float64, height float64,brightness float64){
   transform: {
     templ.SafeCSSProperty(
     fmt.Sprintf(
-      `scale3d(1,-1,1) translate3d(%dpx,%dpx,%dpx) rotate3d(0,1,0,%ddeg) `,
+      `scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg) `,
       trnsx,
       trnsy,
       trnsz,
@@ -24,19 +25,42 @@ css plane(xrot int, yrot int, zrot int, trnsx int,trnsy int,trnsz int, height in
   filter: {
     templ.SafeCSSProperty(
     fmt.Sprintf(
-      `brightness(%d%%)`,
+      `brightness(%f%%)`,
       brightness,
     ))
     };
   color: red;
   font-size: 30px;
   position: absolute;
-  height: {fmt.Sprintf("%dpx", height)};
+  height: {fmt.Sprintf("%fpx", height)};
+}
+
+css point(position utils.Vector3){
+  transform: {
+    templ.SafeCSSProperty(
+    fmt.Sprintf(
+      `scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx)`,
+      position.X,
+      position.Y,
+      position.Z,
+      ))
+  };
+  transform-style: preserve-3d;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  transform-origin: 128px 0px 128px;
+  color: red;
+  font-size: 30px;
+  position: absolute;
 }
 
 templ Plane(wall gameobjects.Wall) {
-<div class={plane(0,wall.Rotation,0,wall.X,wall.Y,wall.Z,wall.Height,wall.Brightness)}>
-  {fmt.Sprintf("%+v, %+v",wall.X,wall.Z)}
+<div class={point(wall.Collider.Position)}>
+*
+</div>
+<div class={plane(0,wall.Rotation.Y,0,wall.Position.X,wall.Position.Y,wall.Position.Z,wall.Height,wall.Brightness)}>
+  {fmt.Sprintf("%+v, %+v",wall.Position.X,wall.Position.Z)}
 
   //we'll get back to you later....
   //<iframe src="https://example.com" height="1024"></iframe>

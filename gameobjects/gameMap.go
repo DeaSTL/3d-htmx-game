@@ -1,7 +1,8 @@
 package gameobjects
 
 import (
-	"log"
+
+	"github.com/deastl/htmx-doom/utils"
 )
 
 const WIDTH = 16
@@ -46,7 +47,7 @@ func NewGameMap(options GameMap) GameMap {
 
 	newGameMap.Players = map[string]*Player{}
 
-	log.Printf("%+v", newGameMap.Walls)
+	// log.Printf("%+v", newGameMap.Walls)
 
 	return newGameMap
 }
@@ -81,39 +82,48 @@ func (game *GameMap) genWalls() {
 			if currentTile == 000 {
 				//000|255
 				if eNeighbor == 255 {
-					game.Walls = append(game.Walls, NewWall(Wall{
-						X:        (x) * PLANE_WIDTH,
-						Z:        (y) * PLANE_WIDTH,
-						Rotation: 270 + ROTATION,
-					}))
+					game.Walls = append(game.Walls, NewWall(utils.Vector3{
+						X:        float64(x * PLANE_WIDTH),
+						Z:        float64(y * PLANE_WIDTH),
+          },
+          utils.Vector3{
+						Y: -90 + ROTATION,
+          }))
 				}
 				//255
 				//---
 				//000
 				if nNeighbor == 255 {
-					game.Walls = append(game.Walls, NewWall(Wall{
-						X:        (x) * PLANE_WIDTH,
-						Z:        (y) * PLANE_WIDTH,
-						Rotation: 180 + ROTATION,
+					game.Walls = append(game.Walls, NewWall(utils.Vector3{
+						X:        float64(x * PLANE_WIDTH),
+						Z:        float64(y * PLANE_WIDTH),
+          },
+          utils.Vector3{
+						Y: 180 + ROTATION,
 					}))
 				}
 				//255|000
 				if wNeighbor == 255 {
-					game.Walls = append(game.Walls, NewWall(Wall{
-						X:        (x) * PLANE_WIDTH,
-						Z:        (y) * PLANE_WIDTH,
-						Rotation: 90 + ROTATION,
-					}))
+					game.Walls = append(game.Walls, NewWall(
+            utils.Vector3{
+              X:        float64(x * PLANE_WIDTH),
+              Z:        float64(y * PLANE_WIDTH),
+            },
+            utils.Vector3{
+              Y: 90 + ROTATION,
+            }))
 				}
 				//000
 				//---
 				//255
 				if sNeighbor == 255 {
-					game.Walls = append(game.Walls, NewWall(Wall{
-						X:        (x) * PLANE_WIDTH,
-						Z:        (y) * PLANE_WIDTH,
-						Rotation: 0 + ROTATION,
-					}))
+					game.Walls = append(game.Walls, NewWall(utils.Vector3{
+						X:        float64(x * PLANE_WIDTH),
+						Z:        float64(y * PLANE_WIDTH),
+          },
+          utils.Vector3{
+						Y: 0 + ROTATION,
+          }))
 				}
 			}
 		}
