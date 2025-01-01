@@ -34,22 +34,40 @@ func NewWall(position utils.Vector3, rotation utils.Vector3) Wall {
 
   newWall.Collider.Position = newWall.Position
 
-
+  
   rotatedOffset := utils.Vector3{
-    X: math.Cos((math.Pi / 180.00) * (newWall.Rotation.Y)) * 128,
-    Z: math.Sin((math.Pi / 180.00) * (newWall.Rotation.Y)) * 128,
+    X: math.Sin((math.Pi / 180.00) * (newWall.Rotation.Y)),
+    Z: math.Cos((math.Pi / 180.00) * (newWall.Rotation.Y)),
   }
-  prevPosition := newWall.Collider.Position
+
+  cornerShift := utils.Vector3{
+    X: rotatedOffset.Z,
+    Z: rotatedOffset.X,
+  }.Scale(128)
 
 
+
+
+  newWall.Collider.Size = utils.Vector3{}
+  
+  
   
   newWall.Collider.Position = newWall.Collider.Position.
-      Add(utils.Vector3{X: 128, Z: 128}).Add(rotatedOffset)
+      Add(utils.Vector3{X: 0.5, Z: 0.5}.Scale(255)).
+      Sub(rotatedOffset.Scale(128)).
+      Sub(cornerShift)
+  
+
+  newWall.Collider.Size.X = math.Abs(cornerShift.X * 2)
+  newWall.Collider.Size.Z = math.Abs(cornerShift.Z * 2)
+  newWall.Collider.Size.Y = newWall.Height
 
   
 
-  log.Printf("Rotated Offset %+v angle: %+v new Position %+v", rotatedOffset, newWall.Rotation.Y,newWall.Collider.Position)
-  log.Printf("prev position %+v", prevPosition)
+  log.Printf(
+    "Collider: %+v",
+    newWall.Collider,
+  )
 
   // if newWall.Rotation == 0 {
   //   newWall.Brightness = 0

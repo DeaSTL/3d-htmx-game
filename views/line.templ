@@ -1,0 +1,37 @@
+package views
+
+import (
+  "github.com/deastl/htmx-doom/utils"
+  "math"
+)
+
+
+
+templ Line(v1 utils.Vector3, v2 utils.Vector3) {
+
+    {{ midPoint := utils.Vector3{
+        X: (v1.X + v2.X) / 2,
+        Y: (v1.Y + v2.Y) / 2,
+        Z: (v1.Z + v2.Z) / 2,
+    } }}
+    
+    {{ deltaX := v2.X - v1.X }}
+    {{ deltaY := v2.Y - v1.Y }}
+    {{ deltaZ := v2.Z - v1.Z }}
+    
+    {{ length := math.Sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ) }}
+    
+    {{ rotX := math.Atan2(deltaZ, deltaY) }}
+    {{ rotZ := math.Atan2(deltaY, deltaX) }}
+
+    <div class="line" style="
+        position: absolute;
+        width: 2px; /* Line thickness */
+        height: {{ length }}px;
+        transform: translate3d({{ midPoint.X }}px, {{ midPoint.Y }}px, {{ midPoint.Z }}px) 
+                   rotateX({{ rotX }}rad) 
+                   rotateZ({{ rotZ }}rad);
+        background-color: black;
+    "></div>
+}
+

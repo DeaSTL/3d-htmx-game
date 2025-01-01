@@ -1,7 +1,8 @@
 package gameobjects
 
-
 import (
+	"math"
+
 	"github.com/deastl/htmx-doom/utils"
 )
 
@@ -16,6 +17,61 @@ type BoxCollider struct {
   //width depth and height
   Size utils.Vector3
   Position utils.Vector3
+}
+
+
+func (bc *BoxCollider) FromPoints(points []utils.Vector3) BoxCollider{
+	if len(points) == 0 {
+		// Return an empty bounding box for no points.
+		return BoxCollider{
+			Position: utils.Vector3{X: 0, Y: 0, Z: 0},
+			Size:     utils.Vector3{X: 0, Y: 0, Z: 0},
+		}
+	}
+
+	// Initialize min and max to large/small values.
+	min := utils.Vector3{X: math.Inf(1), Y: math.Inf(1), Z: math.Inf(1)}
+	max := utils.Vector3{X: math.Inf(-1), Y: math.Inf(-1), Z: math.Inf(-1)}
+
+	// Find the min and max for each axis.
+	for _, p := range points {
+		if p.X < min.X {
+			min.X = p.X
+		}
+		if p.Y < min.Y {
+			min.Y = p.Y
+		}
+		if p.Z < min.Z {
+			min.Z = p.Z
+		}
+		if p.X > max.X {
+			max.X = p.X
+		}
+		if p.Y > max.Y {
+			max.Y = p.Y
+		}
+		if p.Z > max.Z {
+			max.Z = p.Z
+		}
+	}
+
+	// Calculate size and position.
+	size := utils.Vector3{
+		X: max.X - min.X,
+		Y: max.Y - min.Y,
+		Z: max.Z - min.Z,
+	}
+	position := utils.Vector3{
+		X: (min.X + max.X) / 2,
+		Y: (min.Y + max.Y) / 2,
+		Z: (min.Z + max.Z) / 2,
+	}
+
+	return BoxCollider{
+		Position: position,
+		Size:     size,
+	}
+  
 }
 
 
