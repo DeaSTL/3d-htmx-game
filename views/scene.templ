@@ -2,12 +2,14 @@ package views
 
 import ("github.com/deastl/htmx-doom/gameobjects"
 "fmt"
+	"github.com/deastl/htmx-doom/utils"
 )
 
 templ Scene(game *gameobjects.GameMap) {
 	<div id="scene" class="scene">
 		for _,wall := range game.Walls {
 			@Plane(wall)
+      @DebugCube(wall.Collider.Position,wall.Collider.Position.Add(wall.Collider.Size).Sub(utils.Vector3{0,-255,0}))
 		}
     <div style="transform-origin: 0 0 0; position: absolute; transform: translate3d(0,0px,0) rotate3d(1,0,0,90deg); background-image: url('/public/stone-floor.jpg'); width: 20000px; height: 20000px; background-size: 255px 255px; transform-style: preserve-3d;">
     </div>                                                                                                       

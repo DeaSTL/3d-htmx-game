@@ -1,0 +1,39 @@
+package views
+
+import (
+"fmt"
+"math"
+"github.com/deastl/htmx-doom/utils"
+)
+
+
+css cubeFace(position utils.Vector3, rotation utils.Vector3, width float64, height float64, color string){
+position: absolute;
+transform-origin: 0 0 0;
+border: { templ.SafeCSSProperty( fmt.Sprintf("1px solid %s",color))};
+width: { templ.SafeCSSProperty( fmt.Sprintf("%fpx",width))};
+height: { templ.SafeCSSProperty( fmt.Sprintf("%fpx",height))};
+transform: { templ.SafeCSSProperty(fmt.Sprintf(`
+translate3d(%fpx,%fpx,%fpx) 
+rotateX(%fdeg) rotateY(%fdeg) 
+rotateZ(%fdeg);
+`, position.X,position.Y,position.Z,rotation.X, rotation.Y, rotation.Z)) };
+}
+
+templ DebugCube(min utils.Vector3, max utils.Vector3) {
+// Calculate the size of the cube
+{{ width := math.Abs(max.X - min.X)}}
+{{ height := math.Abs(max.Y - min.Y)}}
+{{ depth := math.Abs(max.Z - min.Z)}}
+
+
+// Calculate the position to center the cube within the bounds
+//front
+<div class={ cubeFace(min,utils.Vector3{},width,height,"blue")}></div>
+//left
+<div class={ cubeFace(min,utils.Vector3{0,90,0},depth,height,"red")}></div>
+//right
+<div class={ cubeFace(min.Add(utils.Vector3{X:width}),utils.Vector3{0,90,0},depth,height,"orange")}></div>
+//back
+<div class={ cubeFace(min.Sub(utils.Vector3{Z:depth}),utils.Vector3{0,0,0},width,height,"green")}></div>
+}
