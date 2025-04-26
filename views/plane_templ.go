@@ -14,33 +14,39 @@ import (
 	"github.com/deastl/htmx-doom/utils"
 )
 
-func plane(xrot float64, yrot float64, zrot float64, trnsx float64, trnsy float64, trnsz float64, height float64, brightness float64) templ.CSSClass {
+func plane(
+	rot utils.Vector3,
+	trans utils.Vector3,
+	size utils.Dimension2,
+	brightness float64,
+	color string,
+) templ.CSSClass {
 	templ_7745c5c3_CSSBuilder := templruntime.GetBuilder()
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`transform`,
 		templ.SafeCSSProperty(
 			fmt.Sprintf(
 				`scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg) `,
-				trnsx,
-				trnsy,
-				trnsz,
-				yrot,
+				trans.X,
+				trans.Y,
+				trans.Z,
+				rot.Y,
 			)))))
 	templ_7745c5c3_CSSBuilder.WriteString(`transform-style:preserve-3d;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`background-image:url("/public/industrial-wall.jpg");`)
-	templ_7745c5c3_CSSBuilder.WriteString(`width:255px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`background-size:512px 512px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`image-rendering:pixelated;`)
-	templ_7745c5c3_CSSBuilder.WriteString(`transform-origin:128px 0 128px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`transform-origin:0px 0px 0px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`filter`,
 		templ.SafeCSSProperty(
 			fmt.Sprintf(
-				`brightness(%f%%)`,
-				brightness,
+				`brightness(%f%%) drop-shadow(16px 16px 20px %s)`,
+				brightness, color,
 			)))))
 	templ_7745c5c3_CSSBuilder.WriteString(`color:red;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`font-size:30px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`position:absolute;`)
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`height`, fmt.Sprintf("%fpx", height))))
+	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`height`, fmt.Sprintf("%fpx", size.Height))))
+	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`width`, fmt.Sprintf("%fpx", size.Width))))
 	templ_7745c5c3_CSSID := templ.CSSID(`plane`, templ_7745c5c3_CSSBuilder.String())
 	return templ.ComponentCSSClass{
 		ID:    templ_7745c5c3_CSSID,
@@ -62,7 +68,7 @@ func point(position utils.Vector3) templ.CSSClass {
 	templ_7745c5c3_CSSBuilder.WriteString(`width:25px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`height:25px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`border-radius:25px;`)
-	templ_7745c5c3_CSSBuilder.WriteString(`transform-origin:128px 0px 128px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`transform-origin:0px 0px 0px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`color:red;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`font-size:30px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`position:absolute;`)
@@ -94,7 +100,13 @@ func Plane(wall gameobjects.Wall) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{point(wall.Collider.Position)}
+		var templ_7745c5c3_Var2 = []any{plane(
+			utils.Vector3{X: 0, Y: wall.Rotation.Y, Z: 0},
+			wall.Position,
+			utils.Dimension2{Height: wall.Height, Width: wall.Width},
+			wall.Brightness,
+			wall.Color,
+		)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -112,38 +124,16 @@ func Plane(wall gameobjects.Wall) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">*</div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 = []any{plane(0, wall.Rotation.Y, 0, wall.Position.X, wall.Position.Y, wall.Position.Z, wall.Height, wall.Brightness)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var4...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var4).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/plane.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%+v, %+v", wall.Position.X, wall.Position.Z))
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%+v, %+v", wall.Position.X, wall.Position.Z))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/plane.templ`, Line: 63, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/plane.templ`, Line: 72, Col: 58}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

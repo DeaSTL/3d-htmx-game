@@ -1,29 +1,34 @@
 package gameobjects
 
 import (
-	"log"
 	"math"
 
 	"github.com/deastl/htmx-doom/utils"
 )
+
+const PLANE_WIDTH = 255
 
 var count = 0
 
 type Wall struct {
 	PhysicsObject
 	Height     float64
+	Width      float64
 	Brightness float64
+	Color      string
 	ID         int
 }
 
-func NewWall(position utils.Vector3, rotation utils.Vector3) Wall {
+func NewWall(position utils.Vector3, rotation utils.Vector3, color string) Wall {
 	newWall := Wall{}
 	newWall.Position = position
 	newWall.Rotation = rotation
+  newWall.Color = color
 	count++
 	newWall.ID = count
 	if newWall.Height == 0 {
 		newWall.Height = 255
+		newWall.Width = 255
 		newWall.Position.Y = -255
 	}
 	if newWall.Brightness == 0 {
@@ -44,20 +49,19 @@ func NewWall(position utils.Vector3, rotation utils.Vector3) Wall {
 	theta := utils.Vector3{
 		X: math.Sin((math.Pi / 180.00) * (newWall.Rotation.Y)),
 		Z: math.Cos((math.Pi / 180.00) * (newWall.Rotation.Y)),
-    Y: 1,
+		Y: 1,
 	}
 
-  // log.Printf("Theta %+v", theta)
+	// log.Printf("Theta %+v", theta)
 
 	for i, _ := range colliderPoints {
-    // Shifts the points forward one and multiplies by theta
-		colliderPoints[i] = colliderPoints[i].Mult(theta.Add(utils.Vector3{0,0,1}))
+		// Shifts the points forward one and multiplies by theta
+		colliderPoints[i] = colliderPoints[i].Mult(theta.Add(utils.Vector3{0, 0, 1}))
 		colliderPoints[i] = colliderPoints[i].Scale(128)
-    colliderPoints[i] = colliderPoints[i].Add(newWall.Position)
+		colliderPoints[i] = colliderPoints[i].Add(newWall.Position)
 	}
 
-  newWall.Collider = newWall.Collider.FromPoints(colliderPoints)
-
+	newWall.Collider = newWall.Collider.FromPoints(colliderPoints)
 
 	// newWall.Collider.Size = utils.Vector3{}
 
@@ -69,10 +73,10 @@ func NewWall(position utils.Vector3, rotation utils.Vector3) Wall {
 	// newWall.Collider.Size.Z = math.Abs(cornerShift.Z * 2)
 	// newWall.Collider.Size.Y = newWall.Height
 
-	log.Printf(
-		"Collider: %+v",
-		newWall.Collider,
-	)
+	// log.Printf(
+	// 	"Collider: %+v",
+	// 	newWall.Collider,
+	// )
 
 	// if newWall.Rotation == 0 {
 	//   newWall.Brightness = 0

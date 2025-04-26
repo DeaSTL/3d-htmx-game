@@ -96,7 +96,7 @@ func (p *Player) Update() {
 	}
 
 	//Sets head level
-	p.Position.Y = 224
+	p.Position.Y = 3000
 
 
   p.Stats = append(p.Stats,Stat{

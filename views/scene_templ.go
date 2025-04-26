@@ -11,7 +11,6 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"fmt"
 	"github.com/deastl/htmx-doom/gameobjects"
-	"github.com/deastl/htmx-doom/utils"
 )
 
 func Scene(game *gameobjects.GameMap) templ.Component {
@@ -41,14 +40,6 @@ func Scene(game *gameobjects.GameMap) templ.Component {
 		}
 		for _, wall := range game.Walls {
 			templ_7745c5c3_Err = Plane(wall).Render(ctx, templ_7745c5c3_Buffer)
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = DebugCube(wall.Collider.Position, wall.Collider.Position.Add(wall.Collider.Size).Sub(utils.Vector3{0, -255, 0})).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
