@@ -7,7 +7,9 @@ import (
 	"github.com/deastl/htmx-doom/utils"
 	hx "github.com/deastl/hxsocketsfiber"
 )
-
+const (
+  floorLevel = 300
+)
 type PlayerControls struct {
 	TurningLeft    bool
 	TurningRight   bool
@@ -37,19 +39,45 @@ type Player struct {
   closeToWall bool
 	sync.Mutex
 }
+func getDirection(degrees float64) string {
+	// Normalize the degrees to the range [0, 360)
+	degrees = float64(int(degrees) % 360)
+	if degrees < 0 {
+		degrees += 360
+	}
 
+	if degrees >= 337.5 || degrees < 22.5 {
+		return "N"
+	} else if degrees >= 22.5 && degrees < 67.5 {
+		return "NE"
+	} else if degrees >= 67.5 && degrees < 112.5 {
+		return "E"
+	} else if degrees >= 112.5 && degrees < 157.5 {
+		return "SE"
+	} else if degrees >= 157.5 && degrees < 202.5 {
+		return "S"
+	} else if degrees >= 202.5 && degrees < 247.5 {
+		return "SW"
+	} else if degrees >= 247.5 && degrees < 292.5 {
+		return "W"
+	} else if degrees >= 292.5 && degrees < 337.5 {
+		return "N"
+	}
+	return "Unknown"
+}
 func NewPlayer(options Player) Player {
 	newPlayer := options
 	newPlayer.updateDirection()
-	newPlayer.MovementSpeed = 25
+	newPlayer.MovementSpeed = 30
+	newPlayer.Position.Y = floorLevel
 	return newPlayer
 }
 
 func (p *Player) Jump() {
-	// if(p.PlayerJumping){ return}
-	// p.YVel = 300
-	// p.PlayerJumping = true
-	// p.YAcc = 30
+	if(p.PlayerJumping){ return}
+	// p.Velocity.Y = 500
+	p.PlayerJumping = true
+	p.Acceleration.Y = 150
 }
 
 func (p *Player) updateDirection() {
@@ -76,27 +104,67 @@ func (p *Player) Update() {
 	}
 
 	if p.ControlsState.TurningRight {
-		p.Rotation.Y += 4
-    p.CameraState.Rotation.Y -= 4
-		p.updateDirection()
+		p.RotationalVelocity.Y += 4
+    // p.CameraState.Rotation.Y -= 4
 	}
 	if p.ControlsState.TurningLeft {
-		p.Rotation.Y -= 4
-    p.CameraState.Rotation.Y += 4
-		p.updateDirection()
-	}
-  p.PreviousPosition = p.Position
-	if p.ControlsState.MovingBackward {
-		p.Position = p.Position.Sub(p.Direction.Scale(p.MovementSpeed))
-    // p.CameraState.Position = p.CameraState.Position.Add(p.Direction.Scale(p.MovementSpeed))
-	}
-	if p.ControlsState.MovingForward {
-		p.Position = p.Position.Add(p.Direction.Scale(p.MovementSpeed))
-    // p.CameraState.Position = p.CameraState.Position.Sub(p.Direction.Scale(p.MovementSpeed))
+		p.RotationalVelocity.Y -= 4
+    // p.CameraState.Rotation.Y += 4
 	}
 
-	//Sets head level
-	p.Position.Y = 3000
+
+  p.PreviousPosition = p.Position
+
+
+	if p.ControlsState.MovingBackward {
+    p.Velocity = p.Velocity.Sub(p.Direction.Scale(p.MovementSpeed))
+	}
+
+	if p.ControlsState.MovingForward {
+    p.Velocity = p.Velocity.Add(p.Direction.Scale(p.MovementSpeed))
+	}
+
+
+  //little bit of a jump boost when in the air
+  if(p.PlayerJumping){
+    //apply gravity
+    // p.Velocity.Y += 15;
+    p.MovementSpeed = 40
+  }else{
+    p.MovementSpeed = 30
+  }
+
+  p.Velocity = p.Velocity.Add(
+    p.Acceleration,
+  ) 
+  p.Position = p.Position.Add(
+    p.Velocity,
+  )
+
+  p.Rotation = p.Rotation.Add(
+    p.RotationalVelocity,
+  )
+  p.CameraState.Rotation = p.CameraState.Rotation.Sub(
+    p.RotationalVelocity,
+  )
+  
+  //friction bitch
+  p.Velocity = p.Velocity.Scale(0.1)
+  p.RotationalVelocity = p.RotationalVelocity.Scale(0.1);
+
+  p.updateDirection()
+
+  //keep player from yeeting through the floor
+  if(p.Position.Y < floorLevel){
+    p.Position.Y = floorLevel;
+    p.PlayerJumping = false
+  }
+
+
+
+
+  p.Velocity.Y -= 25;
+  p.Acceleration = p.Acceleration.Scale(0.65)
 
 
   p.Stats = append(p.Stats,Stat{
@@ -120,13 +188,16 @@ func (p *Player) Update() {
     Key: "Close to wall",
     Value: p.closeToWall,
   })
+  p.Stats = append(p.Stats,Stat{
+    Key: "Rotation",
+    Value: p.Rotation,
+  })
 
-	// p.YVel -= 10;
-	//
-	// p.YVel += p.YAcc
-	//
-	//
-	// p.Y += p.YVel
+  p.Stats = append(p.Stats,Stat{
+    Key: "Compass",
+    Value: getDirection(p.Rotation.Y),
+  })
+
 	//
 	// if p.Y < -4096 {
 	//   p.Y = -4096

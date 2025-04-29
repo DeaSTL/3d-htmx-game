@@ -5,42 +5,47 @@ import (
   "github.com/deastl/htmx-doom/utils"
   "github.com/deastl/htmx-doom/gameobjects"
 )
-css plane(
+
+
+templ PlaneStyle(
+id string,
 rot utils.Vector3,
 trans utils.Vector3,
 size utils.Dimension2,
 brightness float64,
 color string,
+imageUrl string,
 ){
-  transform: {
-    templ.SafeCSSProperty(
-    fmt.Sprintf(
-      `scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg) `,
+    @templ.Raw(fmt.Sprintf(`
+    <style>
+    .plane_%s {
+      background-image: url("%s");
+      filter: brightness(%f%%);
+      transform: scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg);
+      width: %fpx;
+      height: %fpx;
+    }
+    </style>
+    `,id,
+      imageUrl,
+      brightness,
       trans.X,
       trans.Y,
       trans.Z,
       rot.Y,
-      ))
-  };
+      size.Width,
+      size.Height))
+  }
+
+css planeBase(){
   transform-style: preserve-3d;
-  background-image: url("/public/industrial-wall.jpg");
-  background-size: 512px 512px;
+  background-size: 255px 255px;
   image-rendering: pixelated;
   transform-origin: 0px 0px 0px;
-  filter: {
-    templ.SafeCSSProperty(
-    fmt.Sprintf(
-      `brightness(%f%%) drop-shadow(16px 16px 20px %s)`,
-      brightness,color,
-    ))
-    };
   color: red;
   font-size: 30px;
   position: absolute;
-  height: {fmt.Sprintf("%fpx", size.Height)};
-  width: {fmt.Sprintf("%fpx", size.Width)};
 }
-
 css point(position utils.Vector3){
   transform: {
     templ.SafeCSSProperty(
@@ -62,17 +67,14 @@ css point(position utils.Vector3){
 }
 
 templ Plane(wall gameobjects.Wall) {
-<div class={plane(
+@PlaneStyle(
+fmt.Sprintf("%d",wall.ID),
 utils.Vector3{X: 0,Y:wall.Rotation.Y,Z:0},
 wall.Position,
 utils.Dimension2{Height: wall.Height, Width: wall.Width},
 wall.Brightness,
 wall.Color,
-)}>
-  {fmt.Sprintf("%+v, %+v",wall.Position.X,wall.Position.Z)}
+wall.WallImage)
 
-  //we'll get back to you later....
-  //<iframe src="https://example.com" height="1024"></iframe>
-  //uncomment for pure chaos
-</div>
+<div class={planeBase(),fmt.Sprintf("plane_%d",wall.ID)}></div>
 }

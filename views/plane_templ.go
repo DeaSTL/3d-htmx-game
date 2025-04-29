@@ -14,40 +14,71 @@ import (
 	"github.com/deastl/htmx-doom/utils"
 )
 
-func plane(
+func PlaneStyle(
+	id string,
 	rot utils.Vector3,
 	trans utils.Vector3,
 	size utils.Dimension2,
 	brightness float64,
 	color string,
-) templ.CSSClass {
+	imageUrl string,
+) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var1 == nil {
+			templ_7745c5c3_Var1 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templ.Raw(fmt.Sprintf(`
+    <style>
+    .plane_%s {
+      background-image: url("%s");
+      filter: brightness(%f%%);
+      transform: scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg);
+      width: %fpx;
+      height: %fpx;
+    }
+    </style>
+    `, id,
+			imageUrl,
+			brightness,
+			trans.X,
+			trans.Y,
+			trans.Z,
+			rot.Y,
+			size.Width,
+			size.Height)).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func planeBase() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder := templruntime.GetBuilder()
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`transform`,
-		templ.SafeCSSProperty(
-			fmt.Sprintf(
-				`scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg) `,
-				trans.X,
-				trans.Y,
-				trans.Z,
-				rot.Y,
-			)))))
 	templ_7745c5c3_CSSBuilder.WriteString(`transform-style:preserve-3d;`)
-	templ_7745c5c3_CSSBuilder.WriteString(`background-image:url("/public/industrial-wall.jpg");`)
-	templ_7745c5c3_CSSBuilder.WriteString(`background-size:512px 512px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`background-size:255px 255px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`image-rendering:pixelated;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`transform-origin:0px 0px 0px;`)
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`filter`,
-		templ.SafeCSSProperty(
-			fmt.Sprintf(
-				`brightness(%f%%) drop-shadow(16px 16px 20px %s)`,
-				brightness, color,
-			)))))
 	templ_7745c5c3_CSSBuilder.WriteString(`color:red;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`font-size:30px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`position:absolute;`)
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`height`, fmt.Sprintf("%fpx", size.Height))))
-	templ_7745c5c3_CSSBuilder.WriteString(string(templ.SanitizeCSS(`width`, fmt.Sprintf("%fpx", size.Width))))
-	templ_7745c5c3_CSSID := templ.CSSID(`plane`, templ_7745c5c3_CSSBuilder.String())
+	templ_7745c5c3_CSSID := templ.CSSID(`planeBase`, templ_7745c5c3_CSSBuilder.String())
 	return templ.ComponentCSSClass{
 		ID:    templ_7745c5c3_CSSID,
 		Class: templ.SafeCSS(`.` + templ_7745c5c3_CSSID + `{` + templ_7745c5c3_CSSBuilder.String() + `}`),
@@ -95,19 +126,24 @@ func Plane(wall gameobjects.Wall) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var1 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var1 == nil {
-			templ_7745c5c3_Var1 = templ.NopComponent
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{plane(
+		templ_7745c5c3_Err = PlaneStyle(
+			fmt.Sprintf("%d", wall.ID),
 			utils.Vector3{X: 0, Y: wall.Rotation.Y, Z: 0},
 			wall.Position,
 			utils.Dimension2{Height: wall.Height, Width: wall.Width},
 			wall.Brightness,
 			wall.Color,
-		)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
+			wall.WallImage).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 = []any{planeBase(), fmt.Sprintf("plane_%d", wall.ID)}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var3...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -115,29 +151,16 @@ func Plane(wall gameobjects.Wall) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var2).String())
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var3).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/plane.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%+v, %+v", wall.Position.X, wall.Position.Z))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/plane.templ`, Line: 72, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

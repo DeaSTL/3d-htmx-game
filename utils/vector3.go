@@ -22,6 +22,10 @@ func (v1 Vector3) Add(v2 Vector3) Vector3 {
 		Z: v1.Z + v2.Z,
 	}
 }
+
+func (v1 Vector3) Zero() Vector3{
+  return Vector3{0,0,0}
+}
 func (v1 Vector3) Sub(v2 Vector3) Vector3 {
 	return Vector3{
 		X: v1.X - v2.X,
