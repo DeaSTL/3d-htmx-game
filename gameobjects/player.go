@@ -65,11 +65,17 @@ func getDirection(degrees float64) string {
 	}
 	return "Unknown"
 }
-func NewPlayer(options Player) Player {
+func NewPlayer(options *Player) *Player {
+  options.Lock()
 	newPlayer := options
 	newPlayer.updateDirection()
 	newPlayer.MovementSpeed = 30
 	newPlayer.Position.Y = floorLevel
+  newPlayer.Collider = BoxCollider{
+    Size: utils.Vector3{128,300,128},
+    Position: newPlayer.Position,
+  }
+  options.Unlock()
 	return newPlayer
 }
 
@@ -88,14 +94,21 @@ func (p *Player) updateDirection() {
 func (p *Player) CalaculateCollision(gameMap *GameMap){
   p.closeToWall = false;
   // lowestDistanceX, lowestDistanceY := 0,0;
+  collisions := 0 
   for _, wall := range gameMap.Walls {
-    XDist := math.Abs(wall.Position.X - p.Position.X)
-    YDist := math.Abs(wall.Position.Z - p.Position.Z)
-    if XDist < 100  && YDist < 100{
+    if(wall.Collider.IsColliding(&p.Collider)){
+      collisions++
+      // diff := p.Position.Sub(p.PreviousPosition)
+      // p.Velocity = p.Velocity.Add(diff.Scale(-2))
       p.Position = p.PreviousPosition
       p.closeToWall = true
     }
+    // XDist := math.Abs(wall.Position.X - p.Position.X)
+    // YDist := math.Abs(wall.Position.Z - p.Position.Z)
+    // if XDist < 100  && YDist < 100{
+    // }
   }
+  // log.Printf("Collissions %+v", collisions)
 }
 func (p *Player) Update() {
   p.Stats = []Stat{}
@@ -197,6 +210,9 @@ func (p *Player) Update() {
     Key: "Compass",
     Value: getDirection(p.Rotation.Y),
   })
+
+  p.Collider.Position = p.Position
+
 
 	//
 	// if p.Y < -4096 {

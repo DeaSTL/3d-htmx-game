@@ -74,29 +74,36 @@ func (bc *BoxCollider) FromPoints(points []utils.Vector3) BoxCollider{
   
 }
 
+func (a *BoxCollider) IsColliding(b *BoxCollider) bool {
+	aMin := utils.Vector3{
+		X: a.Position.X - a.Size.X/2,
+		Y: a.Position.Y - a.Size.Y/2,
+		Z: a.Position.Z - a.Size.Z/2,
+	}
+	aMax := utils.Vector3{
+		X: a.Position.X + a.Size.X/2,
+		Y: a.Position.Y + a.Size.Y/2,
+		Z: a.Position.Z + a.Size.Z/2,
+	}
 
-func (collider *BoxCollider) IsColliding(otherCollider *BoxCollider) bool {
-    // Check for overlap in the x-axis
-    if collider.Position.X+collider.Size.X < otherCollider.Position.X || 
-       otherCollider.Position.X+otherCollider.Size.X < collider.Position.X {
-        return false
-    }
+	bMin := utils.Vector3{
+		X: b.Position.X - b.Size.X/2,
+		Y: b.Position.Y - b.Size.Y/2,
+		Z: b.Position.Z - b.Size.Z/2,
+	}
+	bMax := utils.Vector3{
+		X: b.Position.X + b.Size.X/2,
+		Y: b.Position.Y + b.Size.Y/2,
+		Z: b.Position.Z + b.Size.Z/2,
+	}
 
-    // Check for overlap in the y-axis
-    if collider.Position.Y+collider.Size.Y < otherCollider.Position.Y || 
-       otherCollider.Position.Y+otherCollider.Size.Y < collider.Position.Y {
-        return false
-    }
+  // log.Printf("amin: %+v, amax: %+v bmin: %+v , bmax: %+v", aMin,aMax,bMin, bMax);
 
-    // Check for overlap in the z-axis
-    if collider.Position.Z+collider.Size.Z < otherCollider.Position.Z || 
-       otherCollider.Position.Z+otherCollider.Size.Z < collider.Position.Z {
-        return false
-    }
-
-    // If none of the axes are disjoint, the boxes are colliding
-    return true
+	return aMin.X <= bMax.X && aMax.X >= bMin.X &&
+		aMin.Y <= bMax.Y && aMax.Y >= bMin.Y &&
+		aMin.Z <= bMax.Z && aMax.Z >= bMin.Z
 }
+
 
 
 type PhysicsObject struct {

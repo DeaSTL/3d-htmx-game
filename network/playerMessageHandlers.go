@@ -27,7 +27,7 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 			// if client.ID == "NULL" {
 			//   return;
 			// }
-			// p.CalaculateCollision(gameMap)
+			p.CalaculateCollision(gameMap)
 			p.Socket.WriteMessage(buffer.Bytes())
 			p.FrameCount++
 			//Send stats every 3 frames
@@ -57,19 +57,19 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 			log.Printf("Error rendering scene")
 		}
 
-		newPlayer := gameobjects.NewPlayer(gameobjects.Player{
+		newPlayer := gameobjects.NewPlayer(&gameobjects.Player{
 			ID:     client.ID,
 			Socket: client,
 		})
-		newPlayer.PreviousPosition = utils.NewVector3(1024, 0, 1024)
-		newPlayer.Position = utils.NewVector3(1024, 0, 1024)
+		newPlayer.PreviousPosition = utils.NewVector3(2024, 0, 2024)
+		newPlayer.Position = utils.NewVector3(2024, 0, 2024)
 		newPlayer.Rotation.Y = 128
-		game.AddPlayer(&newPlayer)
+		game.AddPlayer(newPlayer)
 		log.Printf("Player Connected %v", client.ID)
 		newPlayer.Socket = client
 		newPlayer.Socket.WriteMessage(buffer.Bytes())
 		time.Sleep(time.Second * 2)
-		StartRenderUpdateLoop(&newPlayer, game)
+		StartRenderUpdateLoop(newPlayer, game)
 	})
 
 	s.Listen("player_space_up", func(client *hx.Client, msg []byte) {

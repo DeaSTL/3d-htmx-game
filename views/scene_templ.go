@@ -77,7 +77,7 @@ func SceneTransform(player *gameobjects.Player) templ.Component {
 			fmt.Sprintf(`
   transform: perspective(2048px) 
   rotate3d(0,1,0,%fdeg) 
-  translate3d(%fpx,%fpx,%fpx) scale3d(100,-100,100); `,
+  translate3d(%fpx,%fpx,%fpx) scale3d(100,100,100); `,
 				player.Rotation.Y,
 				player.Position.X*-100,
 				player.Position.Y*100,

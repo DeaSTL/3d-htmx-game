@@ -78,6 +78,7 @@ func planeBase() templ.CSSClass {
 	templ_7745c5c3_CSSBuilder.WriteString(`color:red;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`font-size:30px;`)
 	templ_7745c5c3_CSSBuilder.WriteString(`position:absolute;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`backface-visibility:hidden;`)
 	templ_7745c5c3_CSSID := templ.CSSID(`planeBase`, templ_7745c5c3_CSSBuilder.String())
 	return templ.ComponentCSSClass{
 		ID:    templ_7745c5c3_CSSID,
