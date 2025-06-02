@@ -1,0 +1,12 @@
+services:
+  game:
+    stop_signal: SIGKILL
+    ports:
+      - 3000:3000
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    develop:
+      watch:
+        - action: rebuild
+          path: ./

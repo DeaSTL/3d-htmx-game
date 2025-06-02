@@ -1,0 +1,358 @@
+/* /!\ You need to add vendor prefixes in order to render the CSS properly (or simply use http://leaverou.github.io/prefixfree/) /!\ */ #tridiv {
+  perspective: 800px;
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  font-size: 312.5%;
+}
+.face {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+.scene, .shape, .face, .face-wrapper, .cr {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+.scene {
+  width: 80em;
+  height: 80em;
+  top: 50%;
+  left: 50%;
+  margin: -40em 0 0 -40em;
+}
+.shape {
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-origin: 50%;
+}
+.face, .face-wrapper {
+  overflow: hidden;
+  transform-origin: 0 0;
+  backface-visibility: hidden;
+  /* hidden by default, prevent blinking and other weird rendering glitchs */
+}
+.face {
+  background-size: 100% 100%!important;
+  background-position: center;
+}
+.face-wrapper .face {
+  left: 100%;
+  width: 100%;
+  height: 100%
+}
+.photon-shader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%
+}
+.side {
+  left: 50%;
+}
+.cr, .cr .side {
+  height: 100%;
+}
+[class*="cuboid"] .ft, [class*="cuboid"] .bk {
+  width: 100%;
+  height: 100%;
+}
+[class*="cuboid"] .bk {
+  left: 100%;
+}
+[class*="cuboid"] .rt {
+  transform: rotateY(-90deg) translateX(-50%);
+}
+[class*="cuboid"] .lt {
+  transform: rotateY(90deg) translateX(-50%);
+}
+[class*="cuboid"] .tp {
+  transform: rotateX(90deg) translateY(-50%);
+}
+[class*="cuboid"] .bm {
+  transform: rotateX(-90deg) translateY(-50%);
+}
+[class*="cuboid"] .lt {
+  left: 100%;
+}
+[class*="cuboid"] .bm {
+  top: 100%;
+}
+/* .cub-1 styles */
+.cub-1 {
+  transform:translate3D(0em, 4em, 1em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1em;
+  height:4.5em;
+  margin:-2.25em 0 0 -0.5em;
+}
+.cub-1 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-1 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-1 .rt, .cub-1 .lt {
+  width:1em;
+  height:4.5em;
+}
+.cub-1 .tp, .cub-1 .bm {
+  width:1em;
+  height:1em;
+}
+.cub-1 .face {
+  background-color:#8f8f8f;
+}
+/* .cub-2 styles */
+.cub-2 {
+  transform:translate3D(0em, 4em, -1em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1em;
+  height:4.5em;
+  margin:-2.25em 0 0 -0.5em;
+}
+.cub-2 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-2 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-2 .rt, .cub-2 .lt {
+  width:1em;
+  height:4.5em;
+}
+.cub-2 .tp, .cub-2 .bm {
+  width:1em;
+  height:1em;
+}
+.cub-2 .face {
+  background-color:#8f8f8f;
+}
+/* .cub-3 styles */
+.cub-3 {
+  transform:translate3D(0em, 0em, 0em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1.5em;
+  height:4.5em;
+  margin:-2.25em 0 0 -0.75em;
+}
+.cub-3 .ft {
+  transform:translateZ(1.5em);
+}
+.cub-3 .bk {
+  transform:translateZ(-1.5em) rotateY(180deg);
+}
+.cub-3 .rt, .cub-3 .lt {
+  width:3em;
+  height:4.5em;
+}
+.cub-3 .tp, .cub-3 .bm {
+  width:1.5em;
+  height:3em;
+}
+.cub-3 .face {
+  background-color:#245c42;
+}
+/* .cub-4 styles */
+.cub-4 {
+  transform:translate3D(0em, 0.5em, 2em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1em;
+  height:4.5em;
+  margin:-2.25em 0 0 -0.5em;
+}
+.cub-4 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-4 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-4 .rt, .cub-4 .lt {
+  width:1em;
+  height:4.5em;
+}
+.cub-4 .tp, .cub-4 .bm {
+  width:1em;
+  height:1em;
+}
+.cub-4 .face {
+  background-color:#e5d2a9;
+}
+/* .cub-5 styles */
+.cub-5 {
+  transform:translate3D(0em, 0.5em, -2em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1em;
+  height:4.5em;
+  margin:-2.25em 0 0 -0.5em;
+}
+.cub-5 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-5 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-5 .rt, .cub-5 .lt {
+  width:1em;
+  height:4.5em;
+}
+.cub-5 .tp, .cub-5 .bm {
+  width:1em;
+  height:1em;
+}
+.cub-5 .face {
+  background-color:#e5d2a9;
+}
+/* .cub-6 styles */
+.cub-6 {
+  transform:translate3D(0em, -3em, 0em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1em;
+  height:1.5em;
+  margin:-0.75em 0 0 -0.5em;
+}
+.cub-6 .ft {
+  transform:translateZ(0.75em);
+}
+.cub-6 .bk {
+  transform:translateZ(-0.75em) rotateY(180deg);
+}
+.cub-6 .rt, .cub-6 .lt {
+  width:1.5em;
+  height:1.5em;
+}
+.cub-6 .tp, .cub-6 .bm {
+  width:1em;
+  height:1.5em;
+}
+.cub-6 .face {
+  background-color:#e5d2a9;
+}
+/* .cub-7 styles */
+.cub-7 {
+  transform:translate3D(0em, -1.5em, -2em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1.5em;
+  height:1.5em;
+  margin:-0.75em 0 0 -0.75em;
+}
+.cub-7 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-7 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-7 .rt, .cub-7 .lt {
+  width:1em;
+  height:1.5em;
+}
+.cub-7 .tp, .cub-7 .bm {
+  width:1.5em;
+  height:1em;
+}
+.cub-7 .face {
+  background-color:#1d4432;
+}
+/* .cub-8 styles */
+.cub-8 {
+  transform:translate3D(0em, -1.5em, 2em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1.5em;
+  height:1.5em;
+  margin:-0.75em 0 0 -0.75em;
+}
+.cub-8 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-8 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-8 .rt, .cub-8 .lt {
+  width:1em;
+  height:1.5em;
+}
+.cub-8 .tp, .cub-8 .bm {
+  width:1.5em;
+  height:1em;
+}
+.cub-8 .face {
+  background-color:#1d4432;
+}
+/* .cub-9 styles */
+.cub-9 {
+  transform:translate3D(0em, -4em, 0em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:1.5em;
+  height:0.5em;
+  margin:-0.25em 0 0 -0.75em;
+}
+.cub-9 .ft {
+  transform:translateZ(1em);
+}
+.cub-9 .bk {
+  transform:translateZ(-1em) rotateY(180deg);
+}
+.cub-9 .rt, .cub-9 .lt {
+  width:2em;
+  height:0.5em;
+}
+.cub-9 .tp, .cub-9 .bm {
+  width:1.5em;
+  height:2em;
+}
+.cub-9 .face {
+  background-color:#454545;
+}
+/* .cub-10 styles */
+.cub-10 {
+  transform:translate3D(0.5em, 6em, -1em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:2em;
+  height:0.5em;
+  margin:-0.25em 0 0 -1em;
+}
+.cub-10 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-10 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-10 .rt, .cub-10 .lt {
+  width:1em;
+  height:0.5em;
+}
+.cub-10 .tp, .cub-10 .bm {
+  width:2em;
+  height:1em;
+}
+.cub-10 .face {
+  background-color:#545454;
+}
+/* .cub-11 styles */
+.cub-11 {
+  transform:translate3D(0.5em, 6em, 1em) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  opacity:1;
+  width:2em;
+  height:0.5em;
+  margin:-0.25em 0 0 -1em;
+}
+.cub-11 .ft {
+  transform:translateZ(0.5em);
+}
+.cub-11 .bk {
+  transform:translateZ(-0.5em) rotateY(180deg);
+}
+.cub-11 .rt, .cub-11 .lt {
+  width:1em;
+  height:0.5em;
+}
+.cub-11 .tp, .cub-11 .bm {
+  width:2em;
+  height:1em;
+}
+.cub-11 .face {
+  background-color:#545454;
+}

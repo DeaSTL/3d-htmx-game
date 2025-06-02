@@ -44,7 +44,6 @@ func NewWall(position utils.Vector3, rotation utils.Vector3, color string, wallT
 	newWall.Rotation = rotation
 	newWall.Color = color
 	newWall.WallType = wallType
-
   newWall.WallImage = wallTypeUrl(newWall.WallType)
 	count++
 	newWall.ID = count
@@ -65,5 +64,10 @@ func NewWall(position utils.Vector3, rotation utils.Vector3, color string, wallT
     Position: newWall.Position,
   }
 
+  newWall.Collider.CorrectionNormal = utils.Vector3{
+    Z: math.Sin((180 / math.Pi) * newWall.Rotation.Y),
+    Y: 0,
+    X: math.Cos(newWall.Rotation.Y),
+  }
 	return newWall
 }

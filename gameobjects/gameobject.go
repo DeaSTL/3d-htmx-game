@@ -17,6 +17,7 @@ type BoxCollider struct {
   //width depth and height
   Size utils.Vector3
   Position utils.Vector3
+  CorrectionNormal utils.Vector3
 }
 
 

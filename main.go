@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/a-h/templ"
+	"github.com/deastl/htmx-doom/assethandlers"
 	"github.com/deastl/htmx-doom/gameobjects"
 	"github.com/deastl/htmx-doom/network"
 	"github.com/deastl/htmx-doom/views"
@@ -15,6 +16,11 @@ import (
 func main() {
 	app := fiber.New()
 	gameMap := gameobjects.NewGameMap(gameobjects.GameMap{})
+  prefabs := assethandlers.GeneratePrefabs()
+
+  assethandlers.TransformPrefabs(&prefabs)
+  assethandlers.CreateTestPrefabFiles(prefabs)
+
 	app.Static("/public", "./public/")
 	sServer := hx.NewServer(app)
 	sServer.Mount("/ws")

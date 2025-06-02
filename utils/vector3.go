@@ -1,14 +1,12 @@
 package utils
 
 import (
-	"errors"
 	"math"
 )
 
 type Vector3 struct {
 	X, Y, Z float64
 }
-
 
 // NewVector3 creates a new 3D vector
 func NewVector3(x, y, z float64) Vector3 {
@@ -23,9 +21,24 @@ func (v1 Vector3) Add(v2 Vector3) Vector3 {
 	}
 }
 
-func (v1 Vector3) Zero() Vector3{
-  return Vector3{0,0,0}
+func (v1 Vector3) Zero() Vector3 {
+	return Vector3{0, 0, 0}
 }
+
+func (v1 Vector3) Magnitude() float64 {
+	return math.Sqrt(v1.X*v1.X + v1.Y*v1.Y + v1.Z*v1.Z)
+}
+
+func (v1 Vector3) Normalize() Vector3 {
+	magnitude := v1.Magnitude()
+
+	if magnitude == 0 {
+		return Vector3{X: 0, Y: 0, Z: 0}
+	}
+
+	return Vector3{X: v1.X / magnitude, Y: v1.Y / magnitude, Z: v1.Z / magnitude}
+}
+
 func (v1 Vector3) Sub(v2 Vector3) Vector3 {
 	return Vector3{
 		X: v1.X - v2.X,
@@ -58,19 +71,6 @@ func (v Vector3) Norm() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
 }
 
-func (v Vector3) Normalize() (Vector3, error) {
-	norm := v.Norm()
-  //shit's fucked
-	if norm == 0 {
-    return Vector3{}, errors.New("cannot normalize a zero vector, rip!")
-	}
-	return Vector3{
-		X: v.X / norm,
-		Y: v.Y / norm,
-		Z: v.Z / norm,
-	}, nil
-}
-
 func (v Vector3) Scale(scalar float64) Vector3 {
 	return Vector3{
 		X: v.X * scalar,
@@ -78,4 +78,3 @@ func (v Vector3) Scale(scalar float64) Vector3 {
 		Z: v.Z * scalar,
 	}
 }
-
