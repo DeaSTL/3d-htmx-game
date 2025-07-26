@@ -20,6 +20,7 @@ WORKDIR /app
 COPY --from=build-stage /app/maps ./maps
 COPY --from=build-stage /app/public ./public
 COPY --from=build-stage /app/game ./game
+COPY --from=build-stage /app/prefabs ./prefabs
 
 EXPOSE 3000
 

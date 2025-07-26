@@ -40,17 +40,16 @@ func wallTypeUrl(wallType int) string {
 
 func NewWall(position utils.Vector3, rotation utils.Vector3, color string, wallType int) Wall {
 	newWall := Wall{}
-	newWall.Position = position 
+	newWall.Position = position
 	newWall.Rotation = rotation
 	newWall.Color = color
 	newWall.WallType = wallType
-  newWall.WallImage = wallTypeUrl(newWall.WallType)
+  	newWall.WallImage = wallTypeUrl(newWall.WallType)
 	count++
 	newWall.ID = count
 	if newWall.Height == 0 {
 		newWall.Height = 1024
 		newWall.Width = 255
-		// newWall.Position.Y = -1024
 	}
 	if newWall.Brightness == 0 {
 		newWall.Brightness = 80*math.Abs(
@@ -58,7 +57,7 @@ func NewWall(position utils.Vector3, rotation utils.Vector3, color string, wallT
 	}
 
 	newWall.Collider = BoxCollider{}
-  
+
 	newWall.Collider = BoxCollider{
     Size: utils.Vector3{X:newWall.Width/8,Y:newWall.Height*10,Z:newWall.Width/8},
     Position: newWall.Position,
