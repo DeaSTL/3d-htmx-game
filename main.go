@@ -29,7 +29,14 @@ func main() {
 		log.Printf("Client %s", c.ID)
 	})
 	network.RegisterPlayerMessageHandlers(&sServer, &gameMap)
+	
+	// Root endpoint - serves a page with an iframe
 	app.Get("/", func(c *fiber.Ctx) error {
+		return Render(c, views.Index())
+	})
+	
+	// Game endpoint - serves the actual game content
+	app.Get("/game", func(c *fiber.Ctx) error {
 		return Render(c, views.Main())
 	})
 

@@ -16,7 +16,8 @@ templ Main() {
     }
 
     body {
-      transform: translateX(50%) translateY(50%);
+        zoom: 15%;
+      transform: translateX(25%) translateY(25%);
       overflow: hidden;
     }
 
@@ -25,6 +26,7 @@ templ Main() {
       transform-style: preserve-3d;
       margin: 0;
       overflow-scroll: none;
+      transform: translateX(-40vw) translateY(-40vh) rotate3d(1,0,0,20deg);
     }
     .stats {
       position: relative;
@@ -37,12 +39,27 @@ templ Main() {
       height: 200px;
       font-size: 50px;
     }
+    .crosshair {
+      position: static;
+      color: white;
+      font-size: 50px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 2000px;
+
+      transform: scale3d(100,100,100) translate3d(0,1px,0) rotate3d(1,0,0,90deg);
+      background-image: radial-gradient(#00BFFF, white, blue);
+      width: 2000px;
+      height: 2000em;
+      transform-style: preserve-3d;
+    }
+
   </style>
 </head>
 
 <body>
-  <div id="stats" class="stats">
-  </div>
+  // <div id="stats" class="stats">
+  // </div>
   <div hx-ext="ws" ws-connect="/ws">
     <div hx-trigger="load, htmx:wsOpen dely:2s" id="player_init" ws-send>
     </div>
@@ -54,7 +71,7 @@ templ Main() {
       @PlayerControls()
     </div>
   </div>
-  @Hud()
+  // @Hud()
 </body>
 
 </html>
