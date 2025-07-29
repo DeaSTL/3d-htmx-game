@@ -28,7 +28,11 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 			//   return;
 			// }
 			p.CalaculateCollision(gameMap)
-			p.Socket.WriteMessage(buffer.Bytes())
+			err = p.Socket.WriteMessage(buffer.Bytes())
+			if err != nil {
+				p.Socket.Close()
+				break;
+			}
 			p.FrameCount++
 			//Send stats every 3 frames
 			if p.FrameCount%3 == 0 {
@@ -38,7 +42,13 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 				if err != nil {
 					log.Printf("Error rendering Stats")
 				}
-				p.Socket.WriteMessage(buffer.Bytes())
+				err = p.Socket.WriteMessage(buffer.Bytes())
+
+				if err != nil {
+					//something bad happened
+					p.Socket.Conn.Close()
+					break;
+				}
 			}
 		}
 	}()
@@ -67,7 +77,13 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 		game.AddPlayer(newPlayer)
 		log.Printf("Player Connected %v", client.ID)
 		newPlayer.Socket = client
-		newPlayer.Socket.WriteMessage(buffer.Bytes())
+
+		err = newPlayer.Socket.WriteMessage(buffer.Bytes())
+
+		if err != nil {
+			newPlayer.Socket.Conn.Close()
+		}
+
 		time.Sleep(time.Second * 2)
 		StartRenderUpdateLoop(newPlayer, game)
 	})
