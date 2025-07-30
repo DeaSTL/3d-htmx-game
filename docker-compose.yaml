@@ -1,5 +1,7 @@
 services:
-  game:
+  game-dev:
+    profiles:
+      - dev
     stop_signal: SIGKILL
     ports:
       - 3000:3000
@@ -10,3 +12,12 @@ services:
       watch:
         - action: rebuild
           path: ./
+  game-prd:
+    profiles:
+      - prd
+    stop_signal: SIGKILL
+    ports:
+      - 3000:3000
+    build:
+      dockerfile: Dockerfile
+      context: ./

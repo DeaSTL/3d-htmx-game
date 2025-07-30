@@ -71,9 +71,10 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 			ID:     client.ID,
 			Socket: client,
 		})
-		newPlayer.PreviousPosition = utils.NewVector3(2024, 0, 2024)
-		newPlayer.Position = utils.NewVector3(2024, 0, 2024)
-		newPlayer.Rotation.Y = 128
+		newPlayer.Position = utils.NewVector3(10024, 0, 10024)
+		newPlayer.Rotation.Y = 0
+		newPlayer.Rotation.Z = 0
+		newPlayer.Rotation.X = 0
 		game.AddPlayer(newPlayer)
 		log.Printf("Player Connected %v", client.ID)
 		newPlayer.Socket = client
@@ -87,6 +88,10 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 		time.Sleep(time.Second * 2)
 		StartRenderUpdateLoop(newPlayer, game)
 	})
+
+	s.OnClientDisconnect = func (client *hx.Client ) {
+		log.Printf("Player %v disconnected", client.ID)
+	}
 
 	s.Listen("player_space_up", func(client *hx.Client, msg []byte) {
 		game.LookupPlayer(client.ID).ControlsState.Space = false

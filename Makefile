@@ -9,6 +9,3 @@ build: clean
 
 run: build
 	./bin/htmx-3d-game;
-
-run-watch:
-	nodemon -e "go, templ" --ignore "./views/.*go"  --signal SIGKILL --exec "make run"

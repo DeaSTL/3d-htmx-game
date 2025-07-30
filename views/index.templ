@@ -2,126 +2,133 @@ package views
 
 templ Index() {
 <html>
+
 <head>
-	<title>HTMX Raycaster Game</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+  <title>3D HTMX game demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #1a1a1a;
-			color: white;
-			display: block;
-			min-height: 100vh;
-		}
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: white;
+      display: block;
+      min-height: 100vh;
+    }
 
-		.container {
-			text-align: center;
-			max-width: 10000px;
-			padding: 20px;
-		}
+    .container {
+      justify-content: center;
+      text-align: center;
+      max-width: 10000px;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+    }
 
-		h1 {
-			margin-bottom: 20px;
-			color: #ff6b6b;
-			font-size: 2.5em;
-		}
+    h1 {
+      margin-bottom: 20px;
+      color: #ff6b6b;
+      font-size: 2.5em;
+    }
 
-		.description {
-			margin-bottom: 30px;
-			line-height: 1.6;
-			color: #ccc;
-		}
+    .description {
+      margin-bottom: 30px;
+      line-height: 1.6;
+      color: #ccc;
+    }
 
-		.game-frame {
-			border: 3px solid #ff6b6b;
-			border-radius: 10px;
-			overflow: hidden;
-			box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
-			margin: 20px 0;
-			width: 80vw;
-			height: 80vh;
-			padding: 0;
-			overflow: hidden;
-		}
+    .game-frame {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      overflow: none;
+      border: 3px solid #ff6b6b;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+      margin: 20px 0;
+      width: 80vw;
+      height: 80vh;
+      padding: 0;
+      overflow: hidden;
+    }
 
-		iframe {
-			width: 3000px;
-			height: 2000px;
-			border: none;
-			display: block;
-			border: 0;
-			/* -ms-transform: scale(0.25);
+    iframe {
+      resize: auto;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      display: block;
+      border: 0;
+      /* -ms-transform: scale(0.25);
 			-moz-transform: scale(0.25);
 			-o-transform: scale(0.25);
 			-webkit-transform: scale(0.25);
 			transform: scale(0.25);
  */
-			/* -ms-transform-origin: 0 0;
+      /* -ms-transform-origin: 0 0;
 			-moz-transform-origin: 0 0;
 			-o-transform-origin: 0 0;
 			-webkit-transform-origin: 0 0; */
-			transform-style: preserve-3d;
-			transform-origin: -50% 50%;
-		}
+      transform-style: preserve-3d;
+      transform-origin: -50% 50%;
+    }
 
-		.instructions {
-			margin-top: 20px;
-			padding: 15px;
-			background-color: #2a2a2a;
-			border-radius: 8px;
-			border-left: 4px solid #ff6b6b;
-		}
+    .instructions {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      border-left: 4px solid #ff6b6b;
+    }
 
-		.instructions h3 {
-			color: #ff6b6b;
-			margin-bottom: 10px;
-		}
+    .instructions h3 {
+      color: #ff6b6b;
+      margin-bottom: 10px;
+    }
 
-		.instructions ul {
-			text-align: left;
-			list-style-type: none;
-		}
+    .instructions ul {
+      text-align: left;
+      list-style-type: none;
+    }
 
-		.instructions li {
-			margin: 5px 0;
-			padding-left: 20px;
-			position: relative;
-		}
+    .instructions li {
+      margin: 5px 0;
+      padding-left: 20px;
+      position: relative;
+    }
 
-		.instructions li:before {
-			content: "▶";
-			color: #ff6b6b;
-			position: absolute;
-			left: 0;
-		}
-	</style>
+    .instructions li:before {
+      content: "▶";
+      color: #ff6b6b;
+      position: absolute;
+      left: 0;
+    }
+  </style>
 </head>
 
 <body>
-	<div class="container">
-		<h1>HTMX 3d</h1>
-		<p class="description">
-			This is my HTMX 3d "game"!
-		</p>
-
-		<div class="game-frame">
-			<iframe src="/game" title="HTMX Raycaster Game"></iframe>
-		</div>
-
-		<div class="instructions">
-			<h3>How to Play:</h3>
-			<ul>
-				<li>Use W and S to move forward and back</li>
-				<li>Use A and D to rotate</li>
-				<li>Space to jump</li>
-			</ul>
-		</div>
-	</div>
+  <div class="container">
+    <div>
+      <h1>3D HTMX game demo</h1>
+    </div>
+    <div class="game-frame">
+      <iframe src="/game" title="3D HTMX game demo"></iframe>
+    </div>
+    <div class="instructions">
+      <h3>How to Play:</h3>
+      <ul>
+        <li>Use W and S to move forward and back</li>
+        <li>Use A and D to rotate</li>
+        <li>Space to jump</li>
+      </ul>
+    </div>
+  </div>
 </body>
+
 </html>
 }

@@ -25,8 +25,12 @@ templ SceneTransform(player *gameobjects.Player) {
   fmt.Sprintf(`
   transform: perspective(4096px)
   rotate3d(0,1,0,%fdeg)
+  rotate3d(1,0,0,%fdeg)
+  rotate3d(0,0,1,%fdeg)
   translate3d(%fpx,%fpx,%fpx) scale3d(200,200,200); `,
   player.Rotation.Y,
+  player.Rotation.X,
+  player.Rotation.Z,
   player.Position.X * -200,
   player.Position.Y * 200,
   player.Position.Z * -200,
