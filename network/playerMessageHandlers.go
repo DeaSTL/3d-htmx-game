@@ -71,7 +71,7 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 			ID:     client.ID,
 			Socket: client,
 		})
-		newPlayer.Position = utils.NewVector3(10024, 0, 10024)
+		newPlayer.Position = utils.NewVector3(1024, 0, 1024)
 		newPlayer.Rotation.Y = 0
 		newPlayer.Rotation.Z = 0
 		newPlayer.Rotation.X = 0
