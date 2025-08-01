@@ -52,13 +52,18 @@ func RGBAToTile(r uint32, g uint32, b uint32, a uint32) uint32 {
 	//roughly black
 	if RoughlyEqual(r, 255, tolerance) && RoughlyEqual(g, 255, tolerance) && RoughlyEqual(b, 255, tolerance) {
 		return WALLT_INDUSTRIAL
-		//roughly yellow
 	}
+	//roughly yellow
   if RoughlyEqual(r, 255, tolerance) && RoughlyEqual(g, 255, tolerance) && RoughlyEqual(b, 0, tolerance) {
 		return WALLT_BRICK
 	}
+	//red
   if RoughlyEqual(r, 255, tolerance) && RoughlyEqual(g, 0, tolerance) && RoughlyEqual(b, 0, tolerance) {
 		return WALLT_COPPER_INDUSTRIAL
+	}
+	//blue
+  if RoughlyEqual(r, 0, tolerance) && RoughlyEqual(g, 0, tolerance) && RoughlyEqual(b, 255, tolerance) {
+		return WALLT_HTMXCON
 	}
 	return WALLT_VOID
 }

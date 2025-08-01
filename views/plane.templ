@@ -21,7 +21,7 @@ imageUrl string,
     .plane_%s {
       background-image: url("%s");
       filter: brightness(%f%%);
-      transform: scale3d(1,-1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg);
+      transform: scale3d(1,1,1) translate3d(%fpx,%fpx,%fpx) rotate3d(0,1,0,%fdeg);
       width: %fpx;
       height: %fpx;
     }
@@ -30,7 +30,7 @@ imageUrl string,
       imageUrl,
       brightness,
       trans.X,
-      trans.Y,
+      trans.Y - size.Height,
       trans.Z,
       rot.Y,
       size.Width,

@@ -14,6 +14,7 @@ const (
 	WALLT_INDUSTRIAL = 255
 	WALLT_BRICK      = 254
 	WALLT_COPPER_INDUSTRIAL = 253
+	WALLT_HTMXCON = 252
 	WALLT_VOID       = 0
 )
 
@@ -33,7 +34,7 @@ func wallTypeUrl(wallType int) string {
   if(wallType == WALLT_INDUSTRIAL){return "/public/industrial-wall.jpg"}
   if(wallType == WALLT_COPPER_INDUSTRIAL){return "/public/copper-industrial-wall.jpg"}
   if(wallType == WALLT_BRICK){return "/public/brick.jpg"}
-
+  if(wallType == WALLT_HTMXCON){return "/public/htmxcon.jpg"}
   //this will be helpful at some point
   return "IMAGE_NOT_FOUND"
 }
