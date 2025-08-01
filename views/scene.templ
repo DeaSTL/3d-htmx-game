@@ -5,17 +5,40 @@ import (
 	"fmt"
 )
 
+
+templ FloorTile(x int, y int, width int, height int){
+      {{
+      style := fmt.Sprintf(`
+      transform-origin: 0 0 0; 
+      position: absolute; 
+      transform: translate3d(%dpx,0px,%dpx) rotate3d(1,0,0,90deg); 
+      background-image: url('/public/stone-floor.jpg'); 
+      width: %dpx; 
+      height: %dpx; 
+      background-size: 255px 255px; 
+      transform-style: preserve-3d;">
+      `, x, y, width, height)
+      }}
+
+      @templ.Raw(`<div style="`+style+`"></div>`)
+}
+
 templ Scene(game *gameobjects.GameMap) {
+  
+  {{ width := 16384 }}
+  {{ height := 16384 }}
 	<div id="scene" class="scene">
 		for _,wall := range game.Walls {
 			@Plane(wall)
 		}
-    <div style="transform-origin: 0 0 0; position: absolute; transform: translate3d(0,0px,0) rotate3d(1,0,0,90deg); background-image: url('/public/stone-floor.jpg'); width: 20000px; height: 20000px; background-size: 255px 255px; transform-style: preserve-3d;">
-    </div>
 
-    <div style="transform-origin: 0 0 0; position: absolute; transform: translate3d(20000px,0px,0) rotate3d(1,0,0,90deg); background-image: url('/public/stone-floor.jpg'); width: 20000px; height: 20000px; background-size: 255px 255px; transform-style: preserve-3d;">
 
-    </div>
+    for x := 0; x < 2; x++ {
+      for y := 0; y < 2; y++ {
+        @FloorTile(x * width ,y * height, width,height)
+      }
+    }
+
     <div style="position: absolute; transform: scale3d(100,100,100) translate3d(0,1px,0) rotate3d(1,0,0,90deg); background-image: radial-gradient(#00BFFF, white, blue); width: 2000px; height: 2000em; transform-style: preserve-3d;">
     </div>
 	</div>
