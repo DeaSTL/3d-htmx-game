@@ -34,7 +34,7 @@ func main() {
 		for {
 
 			playerCount := 0
-			for _,p := range gameMap.Players {
+			for _, p := range gameMap.Players {
 
 				if p.Exited {
 					continue
@@ -42,11 +42,10 @@ func main() {
 
 				playerCount++
 
-				log.Printf("Player: %+v Position: %+v\n", p.ID, p.Position)
-				
+
 				buffer := new(bytes.Buffer)
 
-				err := views.PlayerSync(gameMap,p.ID).
+				err := views.PlayerSync(gameMap, p.ID).
 					Render(context.Background(), buffer)
 
 				if err != nil {
@@ -63,10 +62,36 @@ func main() {
 				}
 
 			}
-
-			log.Printf("Current Player Count: %+v",playerCount)
 			time.Sleep(time.Millisecond * 250)
 		}
+	}()
+//status reporter
+	go func() {
+		maxPlayerCount := 0
+		for {
+
+			playerCount := 0
+
+			for _, p := range gameMap.Players {
+
+				if p.Exited {
+					continue
+				}
+
+				log.Printf("Player: %+v Position: %+v\n", p.ID, p.Position)
+
+				playerCount++
+			}
+
+			if playerCount > maxPlayerCount {
+				maxPlayerCount = playerCount
+			}
+
+			log.Printf("Current player count: %+v max player count: %+v", playerCount, maxPlayerCount)
+
+			time.Sleep(time.Millisecond * 750)
+		}
+
 	}()
 
 	sServer.Listen("main", func(c *hx.Client, msg []byte) {
