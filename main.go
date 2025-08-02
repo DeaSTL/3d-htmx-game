@@ -32,11 +32,15 @@ func main() {
 	go func() {
 
 		for {
+
+			playerCount := 0
 			for _,p := range gameMap.Players {
 
 				if p.Exited {
 					continue
 				}
+
+				playerCount++
 
 				log.Printf("Player: %+v Position: %+v\n", p.ID, p.Position)
 				
@@ -59,7 +63,9 @@ func main() {
 				}
 
 			}
-			time.Sleep(time.Millisecond * 500)
+
+			log.Printf("Current Player Count: %+v",playerCount)
+			time.Sleep(time.Millisecond * 250)
 		}
 	}()
 
