@@ -39,19 +39,15 @@ templ Main() {
       height: 200px;
       font-size: 50px;
     }
-    .crosshair {
-      position: static;
-      color: white;
-      font-size: 50px;
-      font-weight: bold;
-      text-align: center;
-      line-height: 2000px;
+    .spin {
+      animation-name: spin;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+    }
 
-      transform: scale3d(100,100,100) translate3d(0,1px,0) rotate3d(1,0,0,90deg);
-      background-image: radial-gradient(#00BFFF, white, blue);
-      width: 2000px;
-      height: 2000em;
-      transform-style: preserve-3d;
+    @keyframes spin {
+      from {transform: rotate3d(0,1,0,0)}
+      to {transform: rotate3d(0,1,0,360)}
     }
 
   </style>

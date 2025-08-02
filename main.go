@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"log"
+	"time"
 
 	"github.com/a-h/templ"
 	"github.com/deastl/htmx-doom/assethandlers"
@@ -16,25 +19,60 @@ import (
 func main() {
 	app := fiber.New()
 	gameMap := gameobjects.NewGameMap(gameobjects.GameMap{})
-  prefabs := assethandlers.GeneratePrefabs()
+	prefabs := assethandlers.GeneratePrefabs()
 
-  assethandlers.TransformPrefabs(&prefabs)
-  assethandlers.CreateTestPrefabFiles(prefabs)
+	assethandlers.TransformPrefabs(&prefabs)
+	assethandlers.CreateTestPrefabFiles(prefabs)
 
 	app.Static("/public", "./public/")
 	sServer := hx.NewServer(app)
 	sServer.Mount("/ws")
 
+	//player sync
+	go func() {
+
+		for {
+			for _,p := range gameMap.Players {
+
+				if p.Exited {
+					continue
+				}
+
+				log.Printf("Player: %+v Position: %+v\n", p.ID, p.Position)
+				
+				buffer := new(bytes.Buffer)
+
+				err := views.PlayerSync(gameMap,p.ID).
+					Render(context.Background(), buffer)
+
+				if err != nil {
+					log.Printf("Error rendering player sync")
+					continue
+				}
+
+				p.Lock()
+				err = p.Socket.WriteMessage(buffer.Bytes())
+				p.Unlock()
+
+				if err != nil {
+					continue
+				}
+
+			}
+			time.Sleep(time.Millisecond * 500)
+		}
+	}()
+
 	sServer.Listen("main", func(c *hx.Client, msg []byte) {
 		log.Printf("Client %s", c.ID)
 	})
 	network.RegisterPlayerMessageHandlers(&sServer, &gameMap)
-	
+
 	// Root endpoint - serves a page with an iframe
 	app.Get("/", func(c *fiber.Ctx) error {
 		return Render(c, views.Index())
 	})
-	
+
 	// Game endpoint - serves the actual game content
 	app.Get("/game", func(c *fiber.Ctx) error {
 		return Render(c, views.Main())

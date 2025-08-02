@@ -7,7 +7,6 @@ import (
 	_ "image/png"
 	"log"
 	"os"
-
 	"github.com/deastl/htmx-doom/utils"
 )
 

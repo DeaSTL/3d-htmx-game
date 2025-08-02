@@ -37,6 +37,7 @@ type Player struct {
 	ID            string
 	MovementSpeed float64
   closeToWall bool
+	Exited bool
 	sync.Mutex
 }
 func getDirection(degrees float64) string {

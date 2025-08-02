@@ -1,0 +1,15 @@
+package views
+
+import "github.com/deastl/htmx-doom/gameobjects"
+
+
+templ PlayerSync(game gameobjects.GameMap, playerID string) {
+    <div id="other_players" style="transform-style: preserve-3d; position: absolute; width:100%; height: 100%">
+      for _,p := range game.Players {
+
+        if p.ID != playerID {
+          @OtherPlayer(p.ID, int(p.Position.X), int(p.Position.Z))
+        }
+      }
+    </div>
+}

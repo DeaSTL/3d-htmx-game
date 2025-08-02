@@ -1,0 +1,26 @@
+package views;
+
+import "fmt"
+
+
+templ OtherPlayer(id string, x int, y int){
+  {{ uprightStyle := fmt.Sprintf(`
+    transform: translate3d(%dpx,-300px,%dpx);
+  `,x,y)}}
+
+  {{ upright90Style := fmt.Sprintf(`
+    transform: translate3d(%dpx,-300px,%dpx) rotate3d(0,1,0,90deg);
+  `,x,y)}}
+
+  {{ horizontalStyle := fmt.Sprintf(`
+    transform: translate3d(%dpx,-300px,%dpx) rotate3d(1,0,0,90deg);
+  `,x,y)}}
+
+  @templ.Raw(`
+  <div id="`+id+`" style="transform-style: preserve-3d; width: 100%; height: 100%">
+  <div class="other-player" style="`+uprightStyle+`"></div> 
+  <div class="other-player" style="`+upright90Style+`"></div>
+  <div class="other-player" style="`+horizontalStyle+`"></div>
+  </div>
+  `)
+}

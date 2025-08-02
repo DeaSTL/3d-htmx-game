@@ -28,7 +28,11 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 			//   return;
 			// }
 			p.CalaculateCollision(gameMap)
+
+			p.Lock()
 			err = p.Socket.WriteMessage(buffer.Bytes())
+			p.Unlock()
+
 			if err != nil {
 				p.Socket.Close()
 				break;
@@ -42,7 +46,12 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 				if err != nil {
 					log.Printf("Error rendering Stats")
 				}
+
+				p.Lock()
 				err = p.Socket.WriteMessage(buffer.Bytes())
+				p.Unlock()
+
+
 
 				if err != nil {
 					//something bad happened
@@ -78,8 +87,10 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 		game.AddPlayer(newPlayer)
 		log.Printf("Player Connected %v", client.ID)
 		newPlayer.Socket = client
-
+		
+		newPlayer.Lock()
 		err = newPlayer.Socket.WriteMessage(buffer.Bytes())
+		newPlayer.Unlock()
 
 		if err != nil {
 			newPlayer.Socket.Conn.Close()
@@ -90,6 +101,13 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 	})
 
 	s.OnClientDisconnect = func (client *hx.Client ) {
+		for pk := range game.Players {
+			if(game.Players[pk].Socket.ID == client.ID){
+				var modifiedPlayer = game.Players[pk]
+				modifiedPlayer.Exited = true
+				game.Players[pk] = modifiedPlayer;
+			}
+		}
 		log.Printf("Player %v disconnected", client.ID)
 	}
 
