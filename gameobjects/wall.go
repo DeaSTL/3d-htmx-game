@@ -60,7 +60,7 @@ func NewWall(position utils.Vector3, rotation utils.Vector3, color string, wallT
 	newWall.Collider = BoxCollider{}
 
 	newWall.Collider = BoxCollider{
-    Size: utils.Vector3{X:newWall.Width/8,Y:newWall.Height*10,Z:newWall.Width/8},
+    Size: utils.Vector3{X:newWall.Width,Y:newWall.Height*10,Z:newWall.Width},  // Increased from Width/8 to full Width
     Position: newWall.Position,
   }
 

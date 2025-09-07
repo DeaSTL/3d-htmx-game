@@ -144,4 +144,11 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 	s.Listen("player_right_down", func(client *hx.Client, msg []byte) {
 		game.LookupPlayer(client.ID).ControlsState.TurningRight = true
 	})
+
+	s.Listen("player_sprint_up", func(client *hx.Client, msg []byte) {
+		game.LookupPlayer(client.ID).ControlsState.Sprint = false
+	})
+	s.Listen("player_sprint_down", func(client *hx.Client, msg []byte) {
+		game.LookupPlayer(client.ID).ControlsState.Sprint = true
+	})
 }
