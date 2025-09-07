@@ -13,9 +13,11 @@ services:
         - action: rebuild
           path: ./
   game-prd:
+    image: yeahscience/htmx-3d
     profiles:
       - prd
     stop_signal: SIGKILL
+    platform: linux/arm64,linux/amd64
     ports:
       - 3000:3000
     build:
