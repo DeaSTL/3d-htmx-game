@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 **Local Development:**
-- `make build` - Clean, generate templ files, and build the binary
+- `make build` - Clean and build the binary
 - `make run` - Build and run the application locally  
 - `make clean` - Remove all build artifacts from bin/
 
@@ -13,15 +13,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `docker compose up --build --watch` - Run with hot reload for development
 - Use profile `dev` for development, `prd` for production
 
-**Template Generation:**
-- `templ generate` - Generate Go code from .templ files (required before building)
-
 ## Architecture Overview
 
 This is a multiplayer 3D raycaster "game" built with Go, HTMX, and WebSockets for real-time multiplayer functionality.
 
 **Core Architecture:**
-- **Frontend**: Server-side rendered HTML templates using `templ` package, styled with CSS transforms for 3D projection
+- **Frontend**: Server-side rendered HTML templates using Go's standard `html/template` package, styled with CSS transforms for 3D projection
 - **Backend**: Go web server using Fiber framework with WebSocket support via `hxsocketsfiber`
 - **Real-time Communication**: WebSockets for player synchronization and game state updates
 - **Game Loop**: Server-side player sync runs every 250ms, status reporting every 750ms
@@ -29,7 +26,7 @@ This is a multiplayer 3D raycaster "game" built with Go, HTMX, and WebSockets fo
 **Key Components:**
 - `main.go`: Entry point, Fiber app setup, WebSocket server, and concurrent game loops
 - `gameobjects/`: Core game entities (Player, GameMap, Wall) with physics and collision detection
-- `views/`: Templ templates for rendering 3D scenes, HUD, player controls, and sync data
+- `views/`: HTML templates for rendering 3D scenes, HUD, player controls, and sync data
 - `network/`: WebSocket message handlers for player input and state synchronization
 - `utils/`: Math utilities (Vector3, Matrix4, 2D dimensions)
 - `maps/`: PNG files used as level data (colors mapped to wall types)
@@ -55,7 +52,7 @@ This is a multiplayer 3D raycaster "game" built with Go, HTMX, and WebSockets fo
 - WebSockets push real-time player sync data to all clients
 
 **Development Notes:**
-- Always run `templ generate` before building to update template Go files
+- Templates are loaded automatically from `views/*.html` at application startup
 - Server runs on port 3000 with static assets served from `public/`
 - Game map can be changed by modifying the LoadMap call in `gameobjects/gameMap.go:174`
 - Player sync rate can be adjusted in the main game loop goroutine

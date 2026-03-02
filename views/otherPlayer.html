@@ -1,0 +1,7 @@
+{{define "otherPlayer"}}
+<div id="{{.ID}}" style="transform-style: preserve-3d; width: 100%; height: 100%">
+<div class="other-player" style="transform: translate3d({{.X}}px,-300px,{{.Y}}px);"></div> 
+<div class="other-player" style="transform: translate3d({{.X}}px,-300px,{{.Y}}px) rotate3d(0,1,0,90deg);"></div>
+<div class="other-player" style="transform: translate3d({{.X}}px,-300px,{{.Y}}px) rotate3d(1,0,0,90deg);"></div>
+</div>
+{{end}}

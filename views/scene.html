@@ -1,0 +1,57 @@
+{{define "floorTile"}}
+<div style="transform-origin: 0 0 0; position: absolute; transform: translate3d({{.X}}px,0px,{{.Y}}px) rotate3d(1,0,0,90deg); background-image: url('/public/stone-floor.jpg'); width: {{.Width}}px; height: {{.Height}}px; background-size: 255px 255px; transform-style: preserve-3d;"></div>
+{{end}}
+
+{{define "scene"}}
+<div id="scene" class="scene">
+  {{range .Walls}}
+    {{template "plane" .}}
+  {{end}}
+
+  {{$width := 16384}}
+  {{$height := 16384}}
+  {{range $x := seq 0 2}}
+    {{range $y := seq 0 2}}
+      {{template "floorTile" dict "X" (mul $x $width) "Y" (mul $y $height) "Width" $width "Height" $height}}
+    {{end}}
+  {{end}}
+
+  <div style="position: absolute; transform: scale3d(100,100,100) translate3d(0,1px,0) rotate3d(1,0,0,90deg); background-image: radial-gradient(#00BFFF, white, blue); width: 2000px; height: 2000em; transform-style: preserve-3d;">
+  </div>
+
+  <style>
+    .other-player {
+      border-radius: 50%;
+      width: 200px; 
+      height: 200px; 
+      background-color: #ffffffe0;
+      position: absolute; 
+      transform-style: preserve-3d; 
+      box-shadow: -20px -16px 8px 0 rgb(255 192 192), 20px 15px 20px 0 rgb(255 230 137);
+      filter: blur(20px);
+      animation-duration: 4s;
+      animation-name: pulse-player;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes pulse-player {
+      from { box-shadow: -20px -16px 8px 0 rgb(255 192 192), 20px 15px 20px 0 rgb(255 230 137);}
+      to { box-shadow: -15px -10px 8px 0 rgb(280 150 192), 20px 15px 20px 0 rgb(220 180 137);}
+    }
+  </style>
+  <div id="other_players">
+  </div>
+</div>
+{{end}}
+
+{{define "sceneTransform"}}
+<style id='scene_transform'> 
+#scene{
+  transform: perspective(4096px)
+  rotate3d(0,1,0,{{.Rotation.Y}}deg)
+  rotate3d(1,0,0,{{.Rotation.X}}deg)
+  rotate3d(0,0,1,{{.Rotation.Z}}deg)
+  translate3d({{mul .Position.X -200}}px,{{mul .Position.Y 200}}px,{{mul .Position.Z -200}}px) scale3d(200,200,200); 
+}
+</style>
+{{end}}

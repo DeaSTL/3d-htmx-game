@@ -1,0 +1,17 @@
+services:
+  htmx-3d:
+    image: yeahscience/htmx-3d:latest
+    container_name: htmx-3d
+    restart: unless-stopped
+    networks:
+      - gateway_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.htmx-3d.rule=Host(`htmx-3d.deastl.com`)"
+      - "traefik.http.routers.htmx-3d.entrypoints=websecure"
+      - "traefik.http.routers.htmx-3d.tls.certresolver=letsencrypt"
+      - "traefik.http.services.htmx-3d.loadbalancer.server.port=3000"
+
+networks:
+  gateway_default:
+    external: true

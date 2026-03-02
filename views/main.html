@@ -1,10 +1,5 @@
-package views
-
-
-
-templ Main() {
+{{define "main"}}
 <html>
-
 <head>
   <script src="https://unpkg.com/htmx.org@2.0.1"></script>
   <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
@@ -54,8 +49,8 @@ templ Main() {
 </head>
 
 <body>
-  // <div id="stats" class="stats">
-  // </div>
+  <!-- <div id="stats" class="stats">
+  </div> -->
   <div hx-ext="ws" ws-connect="/ws">
     <div hx-trigger="load, htmx:wsOpen dely:2s" id="player_init" ws-send>
     </div>
@@ -64,11 +59,11 @@ templ Main() {
     <div id="scene" class="scene">
     </div>
     <div id="player_controls">
-      @PlayerControls()
+      {{template "playerControls"}}
     </div>
   </div>
-  //@Hud()
+  <!-- {{template "hud"}} -->
 </body>
 
 </html>
-}
+{{end}}

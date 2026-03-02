@@ -2,27 +2,25 @@ package network
 
 import (
 	"bytes"
-	"context"
+	"html/template"
 	"log"
 	"time"
 
 	"github.com/deastl/htmx-doom/gameobjects"
 	"github.com/deastl/htmx-doom/utils"
-	"github.com/deastl/htmx-doom/views"
 	hx "github.com/deastl/hxsocketsfiber"
 )
 
-func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) {
+func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap, templates *template.Template) {
 	go func() {
 		for {
 			time.Sleep(time.Millisecond * 30)
 			p.Update()
 
 			buffer := new(bytes.Buffer)
-			err := views.SceneTransform(p).
-				Render(context.Background(), buffer)
+			err := templates.ExecuteTemplate(buffer, "sceneTransform", p)
 			if err != nil {
-				log.Printf("Error rendering plane")
+				log.Printf("Error rendering sceneTransform: %v", err)
 			}
 			// if client.ID == "NULL" {
 			//   return;
@@ -41,10 +39,9 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 			//Send stats every 3 frames
 			if p.FrameCount%3 == 0 {
 				buffer := new(bytes.Buffer)
-				err := views.Stats(p.Stats).
-					Render(context.Background(), buffer)
+				err := templates.ExecuteTemplate(buffer, "stats", p.Stats)
 				if err != nil {
-					log.Printf("Error rendering Stats")
+					log.Printf("Error rendering Stats: %v", err)
 				}
 
 				p.Lock()
@@ -62,7 +59,7 @@ func StartRenderUpdateLoop(p *gameobjects.Player, gameMap *gameobjects.GameMap) 
 		}
 	}()
 }
-func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
+func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap, templates *template.Template) {
 	s.Listen("player_init", func(client *hx.Client, msg []byte) {
 		log.Printf("player_init %+v", client.ID)
 		//might parse some meta data here
@@ -70,10 +67,9 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 			return
 		}
 		buffer := new(bytes.Buffer)
-		err := views.Scene(game).
-			Render(context.Background(), buffer)
+		err := templates.ExecuteTemplate(buffer, "scene", game)
 		if err != nil {
-			log.Printf("Error rendering scene")
+			log.Printf("Error rendering scene: %v", err)
 		}
 
 		newPlayer := gameobjects.NewPlayer(&gameobjects.Player{
@@ -97,7 +93,7 @@ func RegisterPlayerMessageHandlers(s *hx.Server, game *gameobjects.GameMap) {
 		}
 
 		time.Sleep(time.Second * 2)
-		StartRenderUpdateLoop(newPlayer, game)
+		StartRenderUpdateLoop(newPlayer, game, templates)
 	})
 
 	s.OnClientDisconnect = func (client *hx.Client ) {

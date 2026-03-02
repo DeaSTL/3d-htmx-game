@@ -1,0 +1,16 @@
+{{define "planeStyle"}}
+<style>
+.plane_{{.ID}} {
+  background-image: url("{{.ImageUrl}}");
+  filter: brightness({{.Brightness}}%);
+  transform: scale3d(1,1,1) translate3d({{.Trans.X}}px,{{sub .Trans.Y .Size.Height}}px,{{.Trans.Z}}px) rotate3d(0,1,0,{{.Rot.Y}}deg);
+  width: {{.Size.Width}}px;
+  height: {{.Size.Height}}px;
+}
+</style>
+{{end}}
+
+{{define "plane"}}
+{{template "planeStyle" dict "ID" .ID "ImageUrl" .WallImage "Brightness" .Brightness "Trans" .Position "Size" (dict "Height" .Height "Width" .Width) "Rot" (dict "Y" .Rotation.Y)}}
+<div class="plane_{{.ID}}" style="transform-style: preserve-3d; background-size: 255px 255px; image-rendering: pixelated; transform-origin: 0px 0px 0px; color: red; font-size: 30px; position: absolute; backface-visibility: hidden;"></div>
+{{end}}

@@ -2,21 +2,92 @@ package main
 
 import (
 	"bytes"
-	"context"
+	"html/template"
 	"log"
 	"time"
 
-	"github.com/a-h/templ"
 	"github.com/deastl/htmx-doom/assethandlers"
 	"github.com/deastl/htmx-doom/gameobjects"
 	"github.com/deastl/htmx-doom/network"
-	"github.com/deastl/htmx-doom/views"
 	"github.com/deastl/hxsocketsfiber"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 )
 
+var templates *template.Template
+
 func main() {
+	// Load all templates
+	var err error
+	templates, err = template.New("").Funcs(template.FuncMap{
+		"seq": func(start, end int) []int {
+			var result []int
+			for i := start; i < end; i++ {
+				result = append(result, i)
+			}
+			return result
+		},
+		"mul": func(a, b interface{}) float64 {
+			var aFloat, bFloat float64
+			switch v := a.(type) {
+			case int:
+				aFloat = float64(v)
+			case float64:
+				aFloat = v
+			case float32:
+				aFloat = float64(v)
+			}
+			switch v := b.(type) {
+			case int:
+				bFloat = float64(v)
+			case float64:
+				bFloat = v
+			case float32:
+				bFloat = float64(v)
+			}
+			return aFloat * bFloat
+		},
+		"int": func(f float64) int { return int(f) },
+		"sub": func(a, b interface{}) float64 {
+			var aFloat, bFloat float64
+			switch v := a.(type) {
+			case int:
+				aFloat = float64(v)
+			case float64:
+				aFloat = v
+			case float32:
+				aFloat = float64(v)
+			}
+			switch v := b.(type) {
+			case int:
+				bFloat = float64(v)
+			case float64:
+				bFloat = v
+			case float32:
+				bFloat = float64(v)
+			}
+			return aFloat - bFloat
+		},
+		"ne": func(a, b string) bool { return a != b },
+		"not": func(b bool) bool { return !b },
+		"dict": func(values ...interface{}) map[string]interface{} {
+			if len(values)%2 != 0 {
+				return nil
+			}
+			dict := make(map[string]interface{}, len(values)/2)
+			for i := 0; i < len(values); i += 2 {
+				key, ok := values[i].(string)
+				if !ok {
+					return nil
+				}
+				dict[key] = values[i+1]
+			}
+			return dict
+		},
+	}).ParseGlob("views/*.html")
+	if err != nil {
+		log.Fatalf("Error parsing templates: %v", err)
+	}
+
 	app := fiber.New()
 	gameMap := gameobjects.NewGameMap(gameobjects.GameMap{})
 	prefabs := assethandlers.GeneratePrefabs()
@@ -45,8 +116,10 @@ func main() {
 
 				buffer := new(bytes.Buffer)
 
-				err := views.PlayerSync(gameMap, p.ID).
-					Render(context.Background(), buffer)
+				err := templates.ExecuteTemplate(buffer, "playerSync", map[string]interface{}{
+					"Players":  gameMap.Players,
+					"PlayerID": p.ID,
+				})
 
 				if err != nil {
 					log.Printf("Error rendering player sync")
@@ -97,25 +170,30 @@ func main() {
 	sServer.Listen("main", func(c *hx.Client, msg []byte) {
 		log.Printf("Client %s", c.ID)
 	})
-	network.RegisterPlayerMessageHandlers(&sServer, &gameMap)
+	network.RegisterPlayerMessageHandlers(&sServer, &gameMap, templates)
 
 	// Root endpoint - serves a page with an iframe
 	app.Get("/", func(c *fiber.Ctx) error {
-		return Render(c, views.Index())
+		c.Set("Content-Type", "text/html")
+		var buf bytes.Buffer
+		err := templates.ExecuteTemplate(&buf, "index", nil)
+		if err != nil {
+			return err
+		}
+		return c.Send(buf.Bytes())
 	})
 
 	// Game endpoint - serves the actual game content
 	app.Get("/game", func(c *fiber.Ctx) error {
-		return Render(c, views.Main())
+		c.Set("Content-Type", "text/html")
+		var buf bytes.Buffer
+		err := templates.ExecuteTemplate(&buf, "main", nil)
+		if err != nil {
+			return err
+		}
+		return c.Send(buf.Bytes())
 	})
 
 	log.Fatal(app.Listen(":3000"))
 
-}
-func Render(c *fiber.Ctx, component templ.Component, options ...func(*templ.ComponentHandler)) error {
-	componentHandler := templ.Handler(component)
-	for _, o := range options {
-		o(componentHandler)
-	}
-	return adaptor.HTTPHandler(componentHandler)(c)
 }
